@@ -1,74 +1,115 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState,useCallback } from "react";
+import { View, Dimensions, StyleSheet, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import {useRouter} from 'expo-router'
+import { NavigationProp } from "@react-navigation/native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const imageBk = require("../../assets/images/fotoPortada_full.jpg");
+
 
 export default function HomeScreen() {
+  const router = useRouter();
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
+        <ImageBackground 
+          source={imageBk} 
+          resizeMode="cover"
+          style={styles.image}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.textH2}>CREATE A WORKOUT PLAN</Text>
+            <Text style={styles.textH1}>TO STAY FIT</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => router.push({
+  pathname: '/View',
+  params: { id: '123' },
+})}
+              // onPress={() => router.push('/View')}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>EMPEZAR</Text>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  textContainer:{
     position: 'absolute',
+    bottom: 180, // Ajusta este valor según necesites
+    left: 0,
+    right: 0,
+    alignItems: 'center', // Centra horizontalmente
+  },
+  textH1: {
+    color: 'white',
+    fontSize: 25,
+    fontFamily:'Cochin',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  textH2: {
+    color: 'white',
+    fontSize: 25,
+    fontFamily:'Cochin',
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 80, 
+    left: 0,
+    right: 0,
+    display:'flex',
+    alignContent:'center',
+    alignItems: 'center', 
+  },
+  button: {
+    fontFamily:'Cochin',
+    fontWeight: 'bold',
+    fontSize: 17,
+    color:'#161618',
+    borderColor:'#A1D70F',
+    backgroundColor:'#BCFD0E',
+    width: '80%',
+    maxWidth: 300,
+    borderStyle:'solid',
+    borderRadius:30,
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  svg:{
+    position:'absolute',
+    right:20,
+    top:10,
+    color:'#161618',
+    marginLeft:10,
+    fontWeight: 'bold',
+  }, 
+    buttonText: {
+    fontFamily: 'Cochin',
+    fontWeight: 'bold',
+    fontSize: 17,
+    height:40,
+    color: '#161618',
+    marginTop:15,
+    // display:'flex',
+    // justifyContent:'center',
+    // alignItems:'center',
   },
 });
