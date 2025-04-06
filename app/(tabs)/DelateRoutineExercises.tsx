@@ -13,6 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useRouter,useFocusEffect,useLocalSearchParams } from 'expo-router'
+import { BackDelateButton } from "@/components/ui/Buttons";
+
 
 interface Exercise {
   id: string;
@@ -44,7 +46,7 @@ const DeleteRoutineExercisesScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
+  
   const fetchRoutines = useCallback(async () => {
     try {
       const storedData = await AsyncStorage.getItem("routines");
@@ -53,7 +55,7 @@ const DeleteRoutineExercisesScreen = () => {
       
       const foundRoutine = routinesList.find((item: Routine | any) => item.id === routineID);
       if (foundRoutine) {
-        const foundDay = foundRoutine.days.find(day => day.id === dayID);
+        const foundDay = Object.values(foundRoutine.days).find(day => day.id === dayID);
         setCurrentDay(foundDay || null);
       }
     } catch (error) {
@@ -109,11 +111,11 @@ const DeleteRoutineExercisesScreen = () => {
     }
     hideDeleteDialog();
   };
-
+  
   const renderExerciseItem = ({ item }: { item: Exercise }) => (
     <TouchableOpacity
-      style={styles.exerciseButton}
-      onPress={() => showDeleteDialog(item.id)}
+    style={styles.exerciseButton}
+    onPress={() => showDeleteDialog(item.id)}
     >
       <Text style={styles.exerciseButtonText}>{item.name}</Text>
       
@@ -124,7 +126,7 @@ const DeleteRoutineExercisesScreen = () => {
       <View style={styles.buttonDecorationRed} />
     </TouchableOpacity>
   );
-
+  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -132,6 +134,8 @@ const DeleteRoutineExercisesScreen = () => {
       </View>
     );
   }
+  
+  
 
   return (
     <View style={styles.container}>
@@ -179,12 +183,7 @@ const DeleteRoutineExercisesScreen = () => {
         </View>
       </Modal>
 
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.push({ pathname: '/ViewExercises',params: {dayID, dayName, routineID, routineName,shouldRefresh:'true'}})}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
+      <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewExercises',params: {dayID, dayName, routineID, routineName,shouldRefresh:'true'}})}/>
     </View>
   );
 };

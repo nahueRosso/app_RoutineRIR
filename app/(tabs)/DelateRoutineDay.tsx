@@ -11,6 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { BackDelateButton } from "@/components/ui/Buttons";
 
 interface Day {
   id: string;
@@ -157,13 +158,8 @@ const DeleteRoutineDayScreen = () => {
           </View>
         </View>
       </Modal>
-
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.push({ pathname: '/ViewDay',params: {routineID: routineID, routineName: routineName,shouldRefresh:'true'}})}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
+      <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewDay',params: {routineID, routineName,shouldRefresh:'true'}})}/>
+     
     </View>
   );
 };

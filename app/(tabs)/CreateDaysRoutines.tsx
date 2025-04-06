@@ -13,6 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { BackDelateButton } from "@/components/ui/Buttons";
+import {daysOptions, exeOptions} from "@/constants/Days"
 
 interface CreateDaysScreenProps {
   navigation: NavigationProp<any>;
@@ -41,7 +43,7 @@ const CustomCheckbox = ({ label, checked, onPress, disabled }: { label: string, 
   </TouchableOpacity>
 );
 
-const CreateDaysScreen = ({ navigation, route }: CreateDaysScreenProps) => {
+const CreateDaysScreen = () => {
   const router = useRouter();
   const { routineName, routineID } = useLocalSearchParams();
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -51,28 +53,6 @@ const CreateDaysScreen = ({ navigation, route }: CreateDaysScreenProps) => {
   const [isMaxDaysReached, setIsMaxDaysReached] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const daysOptions = [
-    { label: "Lunes", value: "Lunes" },
-    { label: "Martes", value: "Martes" },
-    { label: "Miércoles", value: "Miércoles" },
-    { label: "Jueves", value: "Jueves" },
-    { label: "Viernes", value: "Viernes" },
-    { label: "Sábado", value: "Sábado" },
-    { label: "Domingo", value: "Domingo" },
-  ];
-
-  const exeOptions = [
-    { label: "Pecho", value: "Pecho" },
-    { label: "Espalda", value: "Espalda" },
-    { label: "Biceps", value: "Biceps" },
-    { label: "Triceps", value: "Triceps" },
-    { label: "Hombros", value: "Hombros" },
-    { label: "Abdominales", value: "Abdominales" },
-    { label: "Cuadriceps", value: "Cuadriceps" },
-    { label: "Isquiotibiales", value: "Isquiotibiales" },
-    { label: "Glúteos", value: "Glúteos" },
-    { label: "Gemelos", value: "Gemelos" },
-  ];
 
   useFocusEffect(useCallback(() => {
     const fetchRoutines = async () => {
@@ -256,13 +236,8 @@ const CreateDaysScreen = ({ navigation, route }: CreateDaysScreenProps) => {
           </View>
         </View>
       </Modal>
+        <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewDay',params: {routineID, routineName,shouldRefresh:'true'}})}/>
 
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.push({ pathname: '/ViewDay',params: {routineID: routineID, routineName: routineName,shouldRefresh:'true'}})}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -309,6 +284,7 @@ const styles = StyleSheet.create({
     position: "relative",
     marginBottom: 5,
     marginLeft:'10%',
+    zIndex:10000,
   },
   disabledButton: {
     opacity: 0.6,

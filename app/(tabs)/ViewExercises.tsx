@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { 
-  View, 
-  Text, 
-  FlatList, 
-  ActivityIndicator, 
-  TouchableOpacity, 
-  StyleSheet 
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { BackDelateButton, AddButtonBig } from "@/components/ui/Buttons";
 
 interface Routine {
   id: number;
@@ -17,10 +17,12 @@ interface Routine {
   days: any;
 }
 
-
 const RoutineExercisesScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineID, routineName,shouldRefresh } = useLocalSearchParams();
+  const { dayID, dayName, routineID, routineName, shouldRefresh } =
+    useLocalSearchParams();
+
+    console.log('routineID: ',routineID, 'routineName: ',routineName, 'shouldRefresh: ',shouldRefresh);
   const [routines, setRoutines] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +30,9 @@ const RoutineExercisesScreen = () => {
     try {
       const storedData = await AsyncStorage.getItem("routines");
       const routinesList: Routine[] = storedData ? JSON.parse(storedData) : [];
-      const foundRoutine = routinesList.find((item: any) => item.id === routineID);
+      const foundRoutine = routinesList.find(
+        (item: any) => item.id === routineID
+      );
 
       if (!foundRoutine) return;
       const daysArray = Object.values(foundRoutine.days);
@@ -53,8 +57,8 @@ const RoutineExercisesScreen = () => {
 
   const goAddExe = () => {
     router.push({
-      pathname: '/CreateExercises',
-      params: { dayID, dayName, routineName },
+      pathname: "/CreateExercises",
+      params: { dayID, dayName, routineID,routineName },
     });
   };
 
@@ -65,28 +69,32 @@ const RoutineExercisesScreen = () => {
       </View>
     );
   }
-  
-  console.log(routines,routineID  ,routineName)
+
+  console.log(routines, routineID, routineName);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>EJERCICIOS</Text>
-      <View style={{ display: 'flex' }}>
+      <View style={{ display: "flex" }}>
         {Array.isArray(routines?.exercises) && routines.exercises.length > 0 ? (
           <FlatList
             data={routines.exercises}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => router.push({
-                  pathname: '/ViewOneExercise',
-                  params: {
-                    routineID: item.id,
-                    routineName: item.name,
-                    dayID,
-                    routineNameFirst: routineName,
-                  },
-                })}
+                onPress={() =>
+                  router.push({
+                    pathname: "/ViewOneExercise",
+                    params: {
+                      routineID: routineID,
+                      routineName: routineName,
+                      execerID: item.id,
+                      execerName: item.name,
+                      dayID,
+                      execerNameFirst: routineName,
+                    },
+                  })
+                }
                 style={styles.exerciseButton}
               >
                 <Text style={styles.exerciseText}>{item.name}</Text>
@@ -96,40 +104,35 @@ const RoutineExercisesScreen = () => {
             contentContainerStyle={{ paddingBottom: 20 }}
           />
         ) : (
-          <Text style={styles.noExercisesText}>No hay ejercicios disponibles</Text>
+          <Text style={styles.noExercisesText}>
+            No hay ejercicios disponibles
+          </Text>
         )}
 
-        <TouchableOpacity onPress={goAddExe} style={styles.addButton}>
-          <View style={styles.addButtonTextContainer}>
-            <Text style={styles.addButtonText}>ADD NEW{"\n"}EXERCISES</Text>
-          </View>
-          <View style={styles.addButtonIconContainer}>
-            <Icon name="add" size={40} color="#28282A" />
-          </View>
-          <View style={styles.addButtonDecoration} />
-        </TouchableOpacity>
+        <AddButtonBig onPress={goAddExe} text="add new exercises" />
       </View>
 
-      <View style={styles.navigationContainer}>
-        <TouchableOpacity onPress={() => router.push({ pathname: '/ViewDay'})} style={styles.backButton}>
-          <Icon name="arrow-back" size={20} color="#161618" />
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          onPress={() => router.push({
-            pathname: '/DelateRoutineExercises',
+      {/* <View style={styles.navigationContainer}> */}
+      <BackDelateButton
+        onPressBack={() =>
+          router.push({
+            pathname: "/ViewDay",
+            params: { routineID, routineName,shouldRefresh:'true' },
+          })
+        }
+        onPressDelate={() =>
+          router.push({
+            pathname: "/DelateRoutineExercises",
             params: { dayID, dayName, routineID, routineName },
-          })}
-          style={styles.deleteButton}
-        >
-          <Icon name="delete" size={20} color="#161618" />
-        </TouchableOpacity>
-      </View>
+          })
+        }
+        delate={true}
+      />
+
+      {/* </View> */}
     </View>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -139,8 +142,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#161618",
   },
   title: {
@@ -185,81 +188,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontFamily: "Cochin",
-  },
-  addButton: {
-    backgroundColor: "#28282A",
-    // marginTop: 20,
-    width: "80%",
-    height: 100,
-    maxWidth: 300,
-    borderRadius: 10,
-    alignSelf: "center",
-    overflow: "hidden",
-    position: "relative",
-  },
-  addButtonTextContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: 100,
-    width: "70%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonText: {
-    color: "white",
-    fontSize: 20,
-    fontFamily: "Cochin",
-    textAlign: "center",
-    fontWeight: "300",
-    lineHeight: 30,
-  },
-  addButtonIconContainer: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    zIndex: 100,
-    height: "100%",
-    width: "30%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonDecoration: {
-    position: "absolute",
-    width: 150,
-    height: 120,
-    right: -60,
-    bottom: 0,
-    borderRadius: 10,
-    backgroundColor: "#BCFD0E",
-    transform: [{ rotate: "30deg" }],
-  },
-  navigationContainer: {
-    position: "absolute",
-    bottom: 30,
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 40,
-  },
-  backButton: {
-    backgroundColor: "#BCFD0E",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  deleteButton: {
-    backgroundColor: "#C70000",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  }
 });
 
 export default RoutineExercisesScreen;

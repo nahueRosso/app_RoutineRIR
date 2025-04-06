@@ -12,7 +12,7 @@ import { NavigationProp } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useRouter,useFocusEffect,useLocalSearchParams } from 'expo-router'
-
+import { BackDelateButton } from "@/components/ui/Buttons";
 
 interface CreateDaysScreenProps {
   navigation: NavigationProp<any>;
@@ -48,10 +48,11 @@ interface ApiData {
 
 const RoutineOneExerciseScreen = () => {
   const router = useRouter();
-  const { routineID, routineName, dayID, routineNameFirst } = useLocalSearchParams();
-  
-  console.log( routineID, routineName,dayID, routineNameFirst)
+  const { routineID, routineName,execerID ,execerName, dayID, execerNameFirst } = useLocalSearchParams();
+  const [dayName,setDayName] = useState<string>('')
+  console.log('routineID: ',routineID, 'routineName: ',routineName,);
   const [api, setApi] = useState<ApiData | any>();
+  // const [api, setApi] = useState<{exercises: Exercise[]}>({ exercises: [] });
   const [main, setMain] = useState<Exercise | undefined>();
   const [weights, setWeights] = useState<any>(main?.arrSetWeight || []);
   const [rirs, setRirs] = useState<any>(main?.arrSetRIR || []);
@@ -59,8 +60,6 @@ const RoutineOneExerciseScreen = () => {
     // api.exercises.findIndex((e: any) => e.id === routineID)
   );
   const [isSaving, setIsSaving] = useState(false);
-
-  // Cargar datos iniciales
 
   useFocusEffect(
     useCallback(() => {
@@ -70,14 +69,15 @@ const RoutineOneExerciseScreen = () => {
           if (!storedData) return;
           
           const routinesList = JSON.parse(storedData);
-          const routine = routinesList.find((r: any) => r.name === routineNameFirst);
+          const routine = routinesList.find((r: any) => r.name === execerNameFirst);
           if (!routine) return;
           
           const day: any = Object.values(routine.days).find((d: any) => d.id === dayID);
           if (!day) return;
+          setDayName(`${day.name}`)
           
           setApi(day);
-          const currentExercise = day.exercises?.find((e: any) => e.id === routineID);
+          const currentExercise = day.exercises?.find((e: any) => e.id === execerID);
           setMain(currentExercise);
           
           if (currentExercise) {
@@ -90,7 +90,7 @@ const RoutineOneExerciseScreen = () => {
       };
   
       loadData();
-    }, [routineNameFirst, dayID, routineID]) // ✅ Dependencias correctas
+    }, [execerNameFirst, dayID, execerID]) // ✅ Dependencias correctas
   );
 
 
@@ -105,7 +105,7 @@ const RoutineOneExerciseScreen = () => {
       if (!storedData) throw new Error("No routines found");
       
       const routinesList = JSON.parse(storedData);
-      const routineIndex = routinesList.findIndex((r: any) => r.name === routineNameFirst);
+      const routineIndex = routinesList.findIndex((r: any) => r.name === execerNameFirst);
       if (routineIndex === -1) throw new Error("Routine not found");
   
       const dayKey = Object.keys(routinesList[routineIndex].days).find(
@@ -120,7 +120,7 @@ const RoutineOneExerciseScreen = () => {
       
       if (exerciseIndex === -1) throw new Error("Exercise not found");
   
-      // Clonar profundo para evitar mutaciones directas
+      
       const updatedRoutines = JSON.parse(JSON.stringify(routinesList));
       updatedRoutines[routineIndex].days[dayKey].exercises[exerciseIndex].arrSetWeight = [...weights];
       updatedRoutines[routineIndex].days[dayKey].exercises[exerciseIndex].arrSetRIR = [...rirs];
@@ -166,8 +166,21 @@ const RoutineOneExerciseScreen = () => {
   };
 
   const handleGoBack = async () => {
-    await saveChanges();
-    router.push({ pathname: '/ViewExercises'})
+    try {
+      await saveChanges();
+      router.push({
+        pathname: "/ViewExercises",
+        params: {
+          dayID: dayID || "",
+          dayName: dayName || "",
+          routineID: routineID || "",
+          routineName: routineName || "",
+        },
+      });
+    } catch (error) {
+      console.error("Error al guardar o navegar:", error);
+      Alert.alert("Error", "No se pudo guardar los cambios");
+    }
   };
 
   if (!main) {
@@ -237,13 +250,7 @@ const RoutineOneExerciseScreen = () => {
           ))}
         </View>
       </View>
-     
-      <TouchableOpacity 
-        onPress={handleGoBack}
-        style={styles.backButton}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
+     <BackDelateButton onPressBack={handleGoBack}/>
     </View>
   );
 };
@@ -338,18 +345,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: '100%',
     padding: 5,
-  },
-  backButton: {
-    position: "absolute",
-    bottom: 30,
-    left: 30,
-    backgroundColor: "#BCFD0E",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  }
 });
 
 export default RoutineOneExerciseScreen;

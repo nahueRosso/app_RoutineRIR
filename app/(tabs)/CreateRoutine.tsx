@@ -11,6 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { BackDelateButton } from "@/components/ui/Buttons";
 
 const CreateRoutineScreen = () => {
   const router = useRouter();
@@ -65,8 +66,9 @@ const CreateRoutineScreen = () => {
       Alert.alert("Éxito", "Rutina guardada");
       setRoutineName("");
       router.push({
-        pathname: '/CreateDaysRoutines',
-        params: { routineName },
+        pathname: '/View',
+        // pathname: '/CreateDaysRoutines',
+        // params: { routineName },
       });
     } catch (error) {
       Alert.alert("Error", "Hubo un problema al guardar la rutina.");
@@ -121,13 +123,8 @@ const CreateRoutineScreen = () => {
           </View>
         </View>
       </Modal>
-
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.push({ pathname: '/ViewExercises',params: { routineName,shouldRefresh:'true'}})}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
+        <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewExercises',params: { routineName,shouldRefresh:'true'}})}/>  
+      
     </View>
   );
 };

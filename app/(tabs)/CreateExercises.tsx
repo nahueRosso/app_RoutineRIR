@@ -12,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { BackDelateButton } from "@/components/ui/Buttons";
 
 interface Day {
   id: string;
@@ -34,7 +35,7 @@ const buildSetArray = (set: number, value: number): number[] => {
 
 const CreateDaysScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineName } = useLocalSearchParams();
+  const { dayID, dayName, routineID,routineName } = useLocalSearchParams();
   const [exeName, setExeName] = useState("");
   const [set, setSet] = useState("");
   const [weight, setWeight] = useState("");
@@ -143,6 +144,17 @@ const CreateDaysScreen = () => {
       setSet("");
       setWeight("");
       setRir("2");
+
+      router.push({
+        pathname: "/ViewExercises",
+        params: {
+          dayID,
+          dayName,
+          routineID,
+          routineName,
+        },
+      })
+
     } catch (error) {
       Alert.alert("Error", "Hubo un problema al guardar el ejercicio.");
     }
@@ -208,12 +220,19 @@ const CreateDaysScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.push({ pathname: '/ViewExercises'})}
-      >
-        <Icon name="arrow-back" size={20} color="#161618" />
-      </TouchableOpacity>
+      <BackDelateButton onPressBack={() => 
+        router.push({
+          pathname: "/ViewExercises",
+          params: {
+            dayID,
+            dayName,
+            routineID,
+            routineName,
+          },
+        })
+      }/>
+      
+      
     </KeyboardAvoidingView>
   );
 };
@@ -280,18 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#BCFD0E",
     transform: [{ rotate: "25deg" }],
-  },
-  backButton: {
-    position: "absolute",
-    bottom: 30,
-    left: 30,
-    backgroundColor: "#BCFD0E",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  }
 });
 
 export default CreateDaysScreen;
