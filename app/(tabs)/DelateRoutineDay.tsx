@@ -11,11 +11,12 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton,ButtonCustom } from "@/components/ui/Buttons";
 
 interface Day {
   id: string;
   name: string;
+  key:number,
   priorityExercises: string[];
 }
 
@@ -28,14 +29,20 @@ interface Routine {
 const DeleteRoutineDayScreen = () => {
   const router = useRouter();
   const { routineID, routineName } = useLocalSearchParams();
+  console.log(routineName,routineID);
+  
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [dayToDelete, setDayToDelete] = useState<{ routineId: number; dayId: string } | null>(null);
+  const [arrOrder, setArrOrder] = useState();
 
   const fetchRoutines = useCallback(async () => {
     try {
       const storedData = await AsyncStorage.getItem("routines");
       let routinesList: Routine[] = storedData ? JSON.parse(storedData) : [];
+      const daysObject = routinesList.find((e: any) => e.id === routineID)?.days;
+      const daysArray = daysObject ? Object.values(daysObject) : [];
+      // setArrOrder();
       
       // Normalizar la estructura de days
       routinesList = routinesList.map(routine => {
@@ -94,38 +101,41 @@ const DeleteRoutineDayScreen = () => {
   const renderDayItem = ({ item }: { item: [string, Day] }) => {
     const [dayId, day] = item;
     return (
-      <TouchableOpacity
-        key={dayId}
-        style={styles.dayButton}
-        onPress={() => showDeleteDialog(routineID, dayId)}
-      >
-        <Text style={styles.dayButtonText}>
-          {day.priorityExercises[0]}{" "}
-          {day.priorityExercises[1] ? `- ${day.priorityExercises[1]}` : ""}
-        </Text>
-
-        <View style={styles.deleteIconContainer}>
-          <Icon name="delete" size={20} color="#161618" />
-        </View>
-
-        <View style={styles.buttonDecoration} />
-      </TouchableOpacity>
+      <ButtonCustom onPress={() => showDeleteDialog(routineID, dayId)} textFirst={`${day.name}`} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
     );
   };
 
   const currentRoutine = routines.find((item:any) => item.id === routineID);
+
+// Verificación segura y ordenamiento
+const sortedDaysArray = currentRoutine?.days 
+  ? Object.entries(currentRoutine.days)
+      .sort((a, b) => a[1].key - b[1].key)
+      .map(([_, dayData]) => dayData)
+  : [];
+
+console.log(sortedDaysArray); // Corregido el nombre de la variable
+const objVacio:any = {}
+for (let i = 0; i < sortedDaysArray.length; i++) {
+  objVacio[sortedDaysArray[i].name] = sortedDaysArray[i];
+  
+}
+
+console.log(objVacio);
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ELIMINAR DÍA</Text>
 
       {currentRoutine && (
-        <FlatList
-          data={Object.entries(currentRoutine.days)}
-          renderItem={renderDayItem}
-          keyExtractor={([dayId]) => dayId}
-          contentContainerStyle={styles.listContainer}
-        />
+       
+       <FlatList
+       data={Object.entries(objVacio) as [string, Day][]}
+       renderItem={renderDayItem}
+       keyExtractor={([dayId]) => dayId}
+       contentContainerStyle={styles.listContainer}
+     />
       )}
 
       <Modal

@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, FlatList, ScrollView, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { BackDelateButton, AddButtonBig } from "@/components/ui/Buttons";
+import {
+  BackDelateButton,
+  AddButtonBig,
+  ButtonCustom,
+  ButtonExample,
+} from "@/components/ui/Buttons";
+import { daysOptions } from "@/constants/Days";
 
 interface DaysScreenProps {
   navigation: any;
@@ -26,8 +26,6 @@ const RoutineScreen = () => {
   const [routines, setRoutines] = useState<Routine[]>([]);
   const { routineID, routineName, shouldRefresh } = useLocalSearchParams();
 
-  console.log('routineID: ',routineID, 'routineName: ',routineName, 'shouldRefresh: ',shouldRefresh);
-  
   const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchRoutines = useCallback(async () => {
@@ -44,7 +42,6 @@ const RoutineScreen = () => {
     useCallback(() => {
       fetchRoutines();
 
-      // Si viene de guardar cambios, forzar recarga
       if (shouldRefresh === "true") {
         setRefreshKey((prev) => prev + 1);
       }
@@ -54,6 +51,7 @@ const RoutineScreen = () => {
   const daysObject =
     routines.find((item: any) => item.id === routineID)?.days || {};
   const daysArray = Object.values(daysObject);
+  // console.log("daysArray: ", daysArray.length);
 
   const goAddDays = () => {
     router.push({
@@ -85,38 +83,68 @@ const RoutineScreen = () => {
   };
 
   const renderDayItem = ({ item: day }: { item: any }) => (
-    <TouchableOpacity
-      style={styles.dayButton}
+
+    <ButtonCustom
       onPress={() => navigateToExercises(day)}
-    >
-      <Text style={styles.dayButtonText}>
-        {day.priorityExercises[0] > 9
+      textFirst={
+        day.priorityExercises[0] > 9
           ? day.priorityExercises[1] > 9
             ? `${day.priorityExercises[0]} - ${day.priorityExercises[0]}`
             : day.priorityExercises[0]
-          : day.priorityExercises[0]}
-      </Text>
-      <View style={styles.dayDecoration} />
-    </TouchableOpacity>
+          : day.priorityExercises[0]
+      }
+      textSecond={day.name}    />
   );
+
+console.log([...daysArray]);
 
   return (
     <View style={styles.container} key={refreshKey}>
       <Text style={styles.title}>AGREGAR DIAS</Text>
       <View style={{ display: "flex" }}>
-        <FlatList
-          data={daysArray}
-          renderItem={renderDayItem}
-          keyExtractor={(item: any) => item.id}
-          contentContainerStyle={styles.listContent}
-        />
-        <AddButtonBig onPress={goAddDays} text="add new days" />
+        {daysArray.length! ? (
+          <FlatList
+            data={[...daysArray].sort((a:any, b:any) => a.key - b.key)}
+            renderItem={renderDayItem}
+            keyExtractor={(item: any) => item.id}
+            contentContainerStyle={styles.listContent}
+            ListFooterComponent={
+              daysArray.length < 5 ? (
+                <AddButtonBig
+                  onPress={goAddDays}
+                  text={"add new days"}
+                  styleContainer={{ marginTop: 20 }}
+                />
+              ) : null
+            }
+            />
+          ) : (
+            <>
+            <ButtonExample textFirst="dia de ejemplo" />
+            <AddButtonBig
+              onPress={goAddDays}
+              text={"add new days"}
+              styleContainer={{ marginTop: 0 }}
+            />
+            </>
+        )}
       </View>
-      <BackDelateButton
-        onPressBack={() => router.push({ pathname: "/View" })}
-        onPressDelate={deleteRoutineDay}
-        delate={true}
-      />
+
+      {daysArray.length < 7 && daysArray.length > 4 ? (
+        <BackDelateButton
+          onPressBack={() => router.push({ pathname: "/View" })}
+          onPressDelate={deleteRoutineDay}
+          delate={true}
+          onPressAdd={goAddDays}
+          addSmall={true}
+        />
+      ) : (
+        <BackDelateButton
+          onPressBack={() => router.push({ pathname: "/View" })}
+          onPressDelate={deleteRoutineDay}
+          delate={true}
+        />
+      )}
     </View>
   );
 };

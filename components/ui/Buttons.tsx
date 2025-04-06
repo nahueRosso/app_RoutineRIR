@@ -1,10 +1,13 @@
 import { TouchableOpacity, View, Text } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { daysOptions } from "@/constants/Days";
 
 export const BackDelateButton = ({
   onPressBack,
-  onPressDelate = "undefined",
+  onPressDelate = undefined,
+  onPressAdd = undefined,
+  addSmall = false,
   delate = false,
 }: any) => {
   return (
@@ -16,39 +19,60 @@ export const BackDelateButton = ({
         right: 0,
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingHorizontal: 40,
+        paddingHorizontal: "16%",
+        paddingBottom: 20,
+        paddingTop: 20,
+        backgroundColor: "#161618",
       }}
     >
       <TouchableOpacity
         onPress={onPressBack}
         style={{
           backgroundColor: "#BCFD0E",
-          width: 40,
-          height: 40,
-          borderRadius: 20,
+          width: 50,
+          height: 50,
+          borderRadius: 30,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Icon name="arrow-back" size={20} color="#161618" />
+        <Icon name="arrow-back" size={25} color="#161618" />
       </TouchableOpacity>
+
+      {addSmall ? (
+        <TouchableOpacity
+          onPress={onPressAdd}
+          style={{
+            backgroundColor: "#BCFD0E",
+            width: 50,
+            height: 50,
+            borderRadius: 30,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Icon name="add" size={25} color="#28282A" />
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
 
       {delate ? (
         <TouchableOpacity
           onPress={onPressDelate}
           style={{
             backgroundColor: "#C70000",
-            width: 40,
-            height: 40,
-            borderRadius: 20,
+            width: 50,
+            height: 50,
+            borderRadius: 30,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Icon name="delete" size={20} color="#161618" />
+          <Icon name="delete" size={25} color="#161618" />
         </TouchableOpacity>
       ) : (
-        <>''</>
+        <></>
       )}
     </View>
   );
@@ -73,9 +97,11 @@ const splitText = (str: string) => {
 export const AddButtonBig = ({
   onPress,
   text,
+  styleContainer,
 }: {
   onPress: any;
   text: string;
+  styleContainer?: object;
 }) => {
   const text_div = splitText(text);
   return (
@@ -90,6 +116,7 @@ export const AddButtonBig = ({
         alignSelf: "center",
         overflow: "hidden",
         position: "relative",
+        ...styleContainer,
       }}
       onPress={onPress}
     >
@@ -143,6 +170,181 @@ export const AddButtonBig = ({
           borderRadius: 10,
           backgroundColor: "#BCFD0E",
           transform: [{ rotate: "30deg" }],
+        }}
+      />
+    </TouchableOpacity>
+  );
+};
+export const AddButtonSmall = ({ onPress }: { onPress: any }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        backgroundColor: "#BCFD0E",
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Icon name="add" size={20} color="#28282A" />
+    </TouchableOpacity>
+  );
+};
+
+export const ButtonCustom = ({
+  onPress,
+  textFirst,
+  textSecond,
+  styleContainer,
+  styleText,
+  styleBox,
+  disabled,
+  delate=false,
+}: {
+  onPress: any;
+  textFirst: string;
+  textSecond?: string | any;
+  styleContainer?: Object;
+  styleText?: Object;
+  styleBox?: Object;
+  disabled?: any;
+  delate?: any;
+}) => {
+//   console.log(
+//     "textFirst: ",
+//     textFirst,
+//     "textSecond: ",
+//     textSecond,
+//     daysOptions.find((e: any) => e.label == textSecond)?.key
+//   );
+// console.log('textSecond;  ',textSecond);
+
+  return (
+    <TouchableOpacity
+      key={daysOptions.find((e: any) => e.label == textSecond)?.key}
+      onPress={onPress}
+      style={{
+        backgroundColor: "#28282A",
+        margin: 10,
+        width: "80%",
+        maxWidth: 300,
+        borderRadius: 10,
+        alignSelf: "center",
+        overflow: "hidden",
+        position: "relative",
+        padding: 15,
+        ...styleContainer,
+      }}
+      disabled={disabled}
+    >
+      <Text
+        style={{
+          color: "white",
+          fontSize: 17,
+          fontFamily: "Cochin",
+          textAlign: "center",
+          fontWeight: "300",
+          textTransform: "capitalize",
+          ...styleText,
+        }}
+      >
+        {textFirst}
+      </Text>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          height: "100%",
+          width: "30%",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000,
+        }}
+      >
+        {typeof textSecond === 'string'?<Text
+          style={{
+            color: "black",
+            fontSize: 20,
+            fontFamily: "DancingScript",
+            textAlign: "left",
+            fontWeight: "bold",
+            marginRight: -40,
+            marginTop: 0,
+            zIndex: 10000,
+          }}
+        >
+          {textSecond?.slice(0, 3)}
+        </Text>:(typeof textSecond === 'undefined')?<></>:textSecond}
+      </View>
+
+      <View
+        style={{
+          position: "absolute",
+          width: 100,
+          height: 100,
+          right: -60,
+          bottom: -20,
+          borderRadius: 10,
+          backgroundColor: "#BCFD0E",
+          transform: [{ rotate: "25deg" }],
+          ...styleBox,
+        }}
+      />
+    </TouchableOpacity>
+  );
+};
+
+//  dayTag: ,
+// dayTagText: ,
+
+export const ButtonExample = ({ textFirst }: { textFirst: string }) => {
+  return (
+    <TouchableOpacity
+      key={14}
+      style={{
+        backgroundColor: "#161618",
+        borderStyle: "dashed",
+        borderWidth: 3,
+        borderColor: "#28282A",
+        margin: 10,
+        width: "80%",
+        maxWidth: 300,
+        borderRadius: 10,
+        marginBottom: 20,
+        alignSelf: "center",
+        overflow: "hidden",
+        position: "relative",
+        padding: 15,
+      }}
+    >
+      <Text
+        style={{
+          color: "#48484A",
+          fontSize: 17,
+          fontFamily: "Cochin",
+          textAlign: "center",
+          fontWeight: "300",
+          textTransform: "capitalize",
+        }}
+      >
+        {textFirst}
+      </Text>
+      <View
+        style={{
+          backgroundColor: "#28282A",
+          borderStyle: "dashed",
+          borderWidth: 3,
+          borderColor: "#161618",
+          position: "absolute",
+          width: 100,
+          height: 100,
+          right: -60,
+          bottom: -20,
+          borderRadius: 10,
+          transform: [{ rotate: "25deg" }],
         }}
       />
     </TouchableOpacity>

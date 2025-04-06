@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useRouter,useFocusEffect,useLocalSearchParams } from 'expo-router'
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton,ButtonCustom } from "@/components/ui/Buttons";
 
 
 interface Exercise {
@@ -113,18 +113,19 @@ const DeleteRoutineExercisesScreen = () => {
   };
   
   const renderExerciseItem = ({ item }: { item: Exercise }) => (
-    <TouchableOpacity
-    style={styles.exerciseButton}
-    onPress={() => showDeleteDialog(item.id)}
-    >
-      <Text style={styles.exerciseButtonText}>{item.name}</Text>
+    <ButtonCustom onPress={() => showDeleteDialog(item.id)} textFirst={item.name} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
+    // <TouchableOpacity
+    // style={styles.exerciseButton}
+    // onPress={() => showDeleteDialog(item.id)}
+    // >
+    //   <Text style={styles.exerciseButtonText}>{item.name}</Text>
       
-      <View style={styles.deleteIconContainer}>
-        <Icon name="delete" size={20} color="#161618" />
-      </View>
+    //   <View style={styles.deleteIconContainer}>
+    //     <Icon name="delete" size={20} color="#161618" />
+    //   </View>
       
-      <View style={styles.buttonDecorationRed} />
-    </TouchableOpacity>
+    //   <View style={styles.buttonDecorationRed} />
+    // </TouchableOpacity>
   );
   
   if (loading) {

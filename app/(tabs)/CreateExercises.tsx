@@ -12,7 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton,ButtonCustom } from "@/components/ui/Buttons";
 
 interface Day {
   id: string;
@@ -24,8 +24,10 @@ interface Exercise {
   name: string;
   sets: number;
   weight: number;
+  repetition: number;
   rir: number;
   arrSetWeight: number[];
+  arrSetRepetition: number[];
   arrSetRIR: number[];
 }
 
@@ -39,6 +41,7 @@ const CreateDaysScreen = () => {
   const [exeName, setExeName] = useState("");
   const [set, setSet] = useState("");
   const [weight, setWeight] = useState("");
+  const [repetition, setRepetition] = useState("");
   const [rir, setRir] = useState("2");
   const [routines, setRoutines] = useState<any>([]);
   const [days, setDays] = useState<any[]>([]);
@@ -89,6 +92,16 @@ const CreateDaysScreen = () => {
     setWeight(text);
   };
 
+  const validateRepetition = (text: string) => {
+    const num = Number(text);
+    if (text === "" || isNaN(num) || num < 1 || num > 15) {
+      setError("Peso debe estar entre 0 y 500");
+    } else {
+      setError("");
+    }
+    setRepetition(text);
+  };
+
   const saveExercise = async () => {
     try {
       if (!exeName.trim() || !set.trim() || !weight.trim() || !rir.trim() || error) {
@@ -130,8 +143,10 @@ const CreateDaysScreen = () => {
         name: exeName,
         sets: parseInt(set),
         weight: parseFloat(weight),
+        repetition:parseFloat(repetition),
         rir: parseInt(rir),
         arrSetWeight: buildSetArray(parseInt(set), parseFloat(weight)),
+        arrSetRepetition: buildSetArray(parseInt(set), parseFloat(repetition)),
         arrSetRIR: buildSetArray(parseInt(set), parseFloat(rir)),
       };
   
@@ -143,6 +158,7 @@ const CreateDaysScreen = () => {
       setExeName("");
       setSet("");
       setWeight("");
+      setRepetition("");
       setRir("2");
 
       router.push({
@@ -199,6 +215,15 @@ const CreateDaysScreen = () => {
         />
         
         <TextInput
+          placeholder="repes (1-15)"
+          placeholderTextColor="#888"
+          value={repetition}
+          onChangeText={validateRepetition}
+          keyboardType="numeric"
+          style={styles.input}
+        />
+        
+        <TextInput
           placeholder="RIR"
           placeholderTextColor="#888"
           value={rir}
@@ -209,15 +234,9 @@ const CreateDaysScreen = () => {
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <TouchableOpacity
-          onPress={saveExercise}
-          disabled={isSaveDisabled}
-          style={[styles.saveButton, isSaveDisabled && styles.disabledButton]}
-        >
-          <Text style={styles.saveButtonText}>Guardar Ejercicio</Text>
-          
-          <View style={styles.buttonDecoration} />
-        </TouchableOpacity>
+
+        <ButtonCustom onPress={saveExercise} textFirst="Guardar Ejercicio" disabled={isSaveDisabled} styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton}/>
+        
       </View>
 
       <BackDelateButton onPressBack={() => 
@@ -254,12 +273,17 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   formContainer: {
-    paddingHorizontal: 16,
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:10    // paddingHorizontal: 16,
+    // marginHorizontal:'10%',
   },
   input: {
     backgroundColor: "#28282A",
     color: "white",
     padding: 15,
+    width:'78%',
     borderRadius: 10,
     marginBottom: 16,
     fontFamily: "Cochin",

@@ -1,11 +1,11 @@
 export const daysOptions = [
-    { label: "Lunes", value: "Lunes" },
-    { label: "Martes", value: "Martes" },
-    { label: "Miércoles", value: "Miércoles" },
-    { label: "Jueves", value: "Jueves" },
-    { label: "Viernes", value: "Viernes" },
-    { label: "Sábado", value: "Sábado" },
-    { label: "Domingo", value: "Domingo" },
+    { label: "Lunes", value: "Lunes",key:1 },
+    { label: "Martes", value: "Martes",key:2 },
+    { label: "Miércoles", value: "Miércoles",key:3 },
+    { label: "Jueves", value: "Jueves",key:4 },
+    { label: "Viernes", value: "Viernes",key:5 },
+    { label: "Sábado", value: "Sábado",key:6 },
+    { label: "Domingo", value: "Domingo",key:7 },
   ];
   
   export const exeOptions = [

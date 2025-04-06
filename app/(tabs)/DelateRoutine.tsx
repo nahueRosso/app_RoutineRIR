@@ -11,7 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton, ButtonCustom } from "@/components/ui/Buttons";
 
 interface Routine {
   id: string;
@@ -64,18 +64,19 @@ const DeleteRoutineScreen = () => {
   };
 
   const renderRoutineItem = ({ item }: { item: Routine }) => (
-    <TouchableOpacity
-      style={styles.routineButton}
-      onPress={() => showDeleteDialog(item)}
-    >
-      <Text style={styles.routineButtonText}>{item.name}</Text>
+    <ButtonCustom onPress={() => showDeleteDialog(item)} textFirst={item.name} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
+    // <TouchableOpacity
+    //   style={styles.routineButton}
+    //   onPress={() => showDeleteDialog(item)}
+    // >
+    //   <Text style={styles.routineButtonText}>{item.name}</Text>
       
-      <View style={styles.deleteIconContainer}>
-        <Icon name="delete" size={20} color="#161618" />
-      </View>
+    //   <View style={styles.deleteIconContainer}>
+    //     <Icon name="delete" size={20} color="#161618" />
+    //   </View>
       
-      <View style={styles.deleteDecoration} />
-    </TouchableOpacity>
+    //   <View style={styles.deleteDecoration} />
+    // </TouchableOpacity>
   );
 
   return (

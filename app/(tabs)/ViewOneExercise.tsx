@@ -23,6 +23,7 @@ interface Exercise {
   id: string;
   name: string;
   arrSetWeight: number[];
+  arrSetRepetition:number[];
   arrSetRIR: number[];
 }
 
@@ -55,6 +56,7 @@ const RoutineOneExerciseScreen = () => {
   // const [api, setApi] = useState<{exercises: Exercise[]}>({ exercises: [] });
   const [main, setMain] = useState<Exercise | undefined>();
   const [weights, setWeights] = useState<any>(main?.arrSetWeight || []);
+  const [repetitions, setRepetitions] = useState<any>(main?.arrSetRepetition || []);
   const [rirs, setRirs] = useState<any>(main?.arrSetRIR || []);
   const [index, setIndex] = useState<any>(
     // api.exercises.findIndex((e: any) => e.id === routineID)
@@ -82,6 +84,7 @@ const RoutineOneExerciseScreen = () => {
           
           if (currentExercise) {
             setWeights(currentExercise.arrSetWeight || []);
+            setRepetitions(currentExercise.arrSetRepetition || []);
             setRirs(currentExercise.arrSetRIR || []);
           }
         } catch (error) {
@@ -120,9 +123,9 @@ const RoutineOneExerciseScreen = () => {
       
       if (exerciseIndex === -1) throw new Error("Exercise not found");
   
-      
       const updatedRoutines = JSON.parse(JSON.stringify(routinesList));
       updatedRoutines[routineIndex].days[dayKey].exercises[exerciseIndex].arrSetWeight = [...weights];
+      updatedRoutines[routineIndex].days[dayKey].exercises[exerciseIndex].arrSetRepetition = [...repetitions]; // Añade esta línea
       updatedRoutines[routineIndex].days[dayKey].exercises[exerciseIndex].arrSetRIR = [...rirs];
       
       await AsyncStorage.setItem("routines", JSON.stringify(updatedRoutines));
@@ -139,6 +142,11 @@ const RoutineOneExerciseScreen = () => {
     const newWeights = [...weights];
     newWeights[index] = parseFloat(value) || 0;
     setWeights(newWeights);
+  };
+  const handleRepetitionChange = (index: number, value: string) => {
+    const newRepetitions = [...repetitions];
+    newRepetitions[index] = parseFloat(value) || 0;
+    setRepetitions(newRepetitions);
   };
   
   const handlerirChange = (index: number, value: string) => {
@@ -162,6 +170,7 @@ const RoutineOneExerciseScreen = () => {
     const newExercise = api.exercises[newIndex];
     setMain(newExercise);
     setWeights(newExercise.arrSetWeight || []);
+    setRepetitions(newExercise.arrSetRepetition || []);
     setRirs(newExercise.arrSetRIR || []);
   };
 
@@ -222,13 +231,27 @@ const RoutineOneExerciseScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.sectionTitle}>Series</Text>
+        <Text style={styles.sectionTitle}>Pesos</Text>
         <View style={styles.inputContainer}>
           {weights.map((weight: any, idx: any) => (
             <View key={idx} style={styles.inputWrapper}>
               <TextInput
                 value={weight.toString()}
                 onChangeText={(text) => handleWeightChange(idx, text)}
+                keyboardType="numeric"
+                style={styles.input}
+              />
+            </View>
+          ))}
+        </View>
+
+        <Text style={styles.sectionTitle}>Repes</Text>
+        <View style={styles.inputContainer}>
+          {repetitions.map((weight: any, idx: any) => (
+            <View key={idx} style={styles.inputWrapper}>
+              <TextInput
+                value={weight.toString()}
+                onChangeText={(text) => handleRepetitionChange(idx, text)}
                 keyboardType="numeric"
                 style={styles.input}
               />
@@ -318,7 +341,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: "white",
     fontSize: 15,
-    marginBottom: 8,
+    marginBottom: 0,
     marginTop: 13,
     textAlign: "center",
     fontFamily: "Cochin",

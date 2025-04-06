@@ -6,8 +6,8 @@ import { NavigationProp } from "@react-navigation/native";
 
 const imageBk = require("../../assets/images/fotoPortada_full.jpg");
 
-
 export default function HomeScreen() {
+  
   const router = useRouter();
   return (
     <SafeAreaProvider>
@@ -25,7 +25,6 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={() => router.push({
   pathname: '/View',
-  params: { id: '123' },
 })}
               // onPress={() => router.push('/View')}
               style={styles.button}

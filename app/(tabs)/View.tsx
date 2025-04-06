@@ -5,12 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ScrollView
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import {
   BackDelateButton,
   AddButtonBig,
+  AddButtonSmall,
+  ButtonCustom,
+  ButtonExample
 } from "@/components/ui/Buttons";
 
 interface Routine {
@@ -39,42 +43,66 @@ const RoutineScreen = () => {
   );
 
   const renderRoutineItem = ({ item }: { item: Routine }) => (
-    <TouchableOpacity
-      style={styles.routineButton}
+    <ButtonCustom
       onPress={() =>
         router.push({
           pathname: "/ViewDay",
           params: { routineID: item.id, routineName: item.name },
         })
       }
-    >
-      <Text style={styles.routineButtonText}>{item.name}</Text>
-    </TouchableOpacity>
+      textFirst={item.name}
+    />
   );
+
+  console.log(routines.length);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MIS RUTINAS</Text>
-      <View style={{ display: "flex" }}>
+      <View style={{
+    flex: 1,  // Esto es crucial
+    marginBottom: 80,  // Espacio para los botones inferiores
+  }}>
+      {routines.length ? (
         <FlatList
           data={routines}
           renderItem={renderRoutineItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
+          ListFooterComponent={routines.length < 5 ? 
+            (
+            <AddButtonBig
+              onPress={() => router.push("/CreateRoutine")}
+              text={"create new routine"}
+              styleContainer={{marginTop:20}}
+            /> 
+          ): null
+        }
         />
-        {routines.length < 5 && (
-          <AddButtonBig
-            onPress={() => router.push("/CreateRoutine")}
-            text={"create new routine"}
-          />
-        )}
-      </View>
-
-<BackDelateButton onPressBack={() => router.back()}
-      onPressDelate={() => router.push("/DelateRoutine")}
-      delate={true}
+      ) : (
+      <>
+        <ButtonExample textFirst="rutina de ejemplo" />
+      <AddButtonBig
+        onPress={() => router.push("/CreateRoutine")}
+        text={"create new routine"}
+        styleContainer={{marginTop:0}}
       />
+      </> 
+      )}
 
+    </View>
+        {(routines.length < 15 && routines.length > 4) ? (<BackDelateButton
+        onPressBack={() => router.back()}
+        onPressDelate={() => router.push("/DelateRoutine")}
+        delate={true}
+        onPressAdd={() => router.push("/CreateRoutine")}
+        addSmall={true}
+      />):(
+      <BackDelateButton
+        onPressBack={() => router.back()}
+        onPressDelate={() => router.push("/DelateRoutine")}
+        delate={true}
+      />)}
       
     </View>
   );

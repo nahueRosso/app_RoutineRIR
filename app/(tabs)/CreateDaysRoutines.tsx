@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton, ButtonCustom } from "@/components/ui/Buttons";
 import {daysOptions, exeOptions} from "@/constants/Days"
+import { CustomCheckbox } from "@/components/ui/CapsuleTabs";
+
 
 interface CreateDaysScreenProps {
   navigation: NavigationProp<any>;
@@ -26,22 +27,6 @@ interface DayOption {
   value: string;
   disabled?: boolean;
 }
-
-
-const CustomCheckbox = ({ label, checked, onPress, disabled }: { label: string, checked: boolean, onPress: () => void, disabled?: boolean }) => (
-  
-  <TouchableOpacity 
-    onPress={onPress} 
-    style={[styles.customCheckboxContainer, disabled && styles.disabledCheckbox]}
-    disabled={disabled}
-    activeOpacity={0.7}
-  >
-    <View style={[styles.checkbox, checked && styles.checked]}>
-      {checked && <Icon name="check" size={15} color="#BCFD0E" />}
-    </View>
-    <Text style={[styles.checkboxLabel, disabled && styles.disabledLabel]}>{label}</Text>
-  </TouchableOpacity>
-);
 
 const CreateDaysScreen = () => {
   const router = useRouter();
@@ -81,7 +66,7 @@ const CreateDaysScreen = () => {
     setModalVisible(selectedDays.length > 1);
   }, [selectedDays]);
 
-  const toggleDaySelection = (dayValue: string) => {
+  const toggleDaySelection = (dayValue: string,key:number) => {
     setSelectedDays(prev => 
       prev.includes(dayValue) 
         ? prev.filter(d => d !== dayValue) 
@@ -131,6 +116,7 @@ const CreateDaysScreen = () => {
         currentRoutine.days[dayName] = {
           id: `${Date.now()}-${dayName}`,
           name: dayName,
+          key:daysOptions.find((e:any)=>e.label == dayName)?.key,
           exercises: [],
           priorityExercises: [...selectedExercises]
         };
@@ -187,7 +173,7 @@ const CreateDaysScreen = () => {
               key={day.value}
               label={day.label}
               checked={selectedDays.includes(day.value)}
-              onPress={() => toggleDaySelection(day.value)}
+              onPress={() => toggleDaySelection(day.value,day.key)}
               disabled={days.some(d => d.name === day.value)}
             />
           ))}
@@ -204,16 +190,10 @@ const CreateDaysScreen = () => {
             />
           ))}
         </View>
+
+        <ButtonCustom onPress={saveDayRoutine} textFirst="Guardar Días" styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton} />
       </ScrollView>
 
-      <TouchableOpacity
-        onPress={saveDayRoutine}
-        disabled={isSaveDisabled}
-        style={[styles.saveButton, isSaveDisabled && styles.disabledButton]}
-      >
-        <Text style={styles.saveButtonText}>Guardar Días</Text>
-        <View style={styles.buttonDecoration} />
-      </TouchableOpacity>
 
       <Modal
         animationType="fade"
@@ -265,25 +245,33 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 8,
     marginTop: 13,
+    marginLeft:'12%',
     textAlign: "left",
     fontFamily: "Cochin",
     fontWeight: "300",
+    textTransform:'capitalize'
   },
   optionsContainer: {
+    flexDirection: 'row',  // Esto coloca los hijos en fila
+    flexWrap: 'wrap',      // Permite que los elementos pasen a la siguiente línea si no caben
+    gap: 8,      
+    marginHorizontal:'10%',          // Espacio entre elementos (React Native 0.71+)
     marginBottom: 20,
+    marginTop: 10,
   },
   saveButton: {
-    // backgroundColor: "#28282A",
-    backgroundColor: "#red",
+    backgroundColor: "#28282A",
+    // backgroundColor: "red",
     padding: 15,
     width: "80%",
     maxWidth: 300,
     borderRadius: 10,
     alignSelf: "center",
     overflow: "hidden",
-    position: "relative",
+    // position: "relative",
+    marginTop:20,
     marginBottom: 5,
-    marginLeft:'10%',
+    // marginLeft:'10%',
     zIndex:10000,
   },
   disabledButton: {
@@ -338,51 +326,7 @@ const styles = StyleSheet.create({
     color: "#161618",
     textAlign: "center",
     fontWeight: "bold",
-  },
-  backButton: {
-    position: "absolute",
-    bottom: 30,
-    left: 30,
-    backgroundColor: "#BCFD0E",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  // Estilos para el CustomCheckbox
-  customCheckboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    backgroundColor: '#28282A',
-    padding: 10,
-    borderRadius: 25,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: '#aaa',
-    borderRadius: 4,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checked: {
-    borderColor: '#BCFD0E',
-  },
-  checkboxLabel: {
-    color: '#aaa',
-    fontFamily: 'Cochin',
-    fontWeight: '300',
-  },
-  disabledCheckbox: {
-    opacity: 0.5,
-  },
-  disabledLabel: {
-    color: '#666',
-  },
+  } 
 });
 
 export default CreateDaysScreen;

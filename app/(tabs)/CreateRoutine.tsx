@@ -11,7 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { BackDelateButton } from "@/components/ui/Buttons";
+import { BackDelateButton,ButtonCustom } from "@/components/ui/Buttons";
 
 const CreateRoutineScreen = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const CreateRoutineScreen = () => {
         routines = [];
       }
 
-      if (routines.length >= 7) {
+      if (routines.length >= 15) {
         setModalVisible(true);
         return;
       }
@@ -93,15 +93,7 @@ const CreateRoutineScreen = () => {
           onChangeText={setRoutineName}
           style={styles.input}
         />
-
-        <TouchableOpacity
-          onPress={saveRoutine}
-          style={styles.saveButton}
-        >
-          <Text style={styles.saveButtonText}>Guardar rutina</Text>
-          
-          <View style={styles.buttonDecoration} />
-        </TouchableOpacity>
+        <ButtonCustom onPress={saveRoutine} textFirst="Guardar rutina"/>
       </View>
 
       <Modal
@@ -123,7 +115,7 @@ const CreateRoutineScreen = () => {
           </View>
         </View>
       </Modal>
-        <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewExercises',params: { routineName,shouldRefresh:'true'}})}/>  
+        <BackDelateButton onPressBack={() => router.push({ pathname: '/View',params: { routineName,shouldRefresh:'true'}})}/>  
       
     </View>
   );
@@ -133,7 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#161618",
-    padding: 20,
+    paddingTop: 20,
   },
   title: {
     color: "white",
@@ -145,15 +137,19 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   inputContainer: {
-    paddingHorizontal: 16,
+    marginTop:10,
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center'
   },
   input: {
     backgroundColor: "#28282A",
     color: "white",
     padding: 15,
     borderRadius: 10,
-    marginBottom: 20,
-    marginHorizontal: 20,
+    marginHorizontal:'10%',
+    width: "70%",
+    marginBottom: 16,
     fontFamily: "Cochin",
   },
   saveButton: {

@@ -4,12 +4,17 @@ import {
   Text,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity,
+  ScrollView,
   StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { BackDelateButton, AddButtonBig } from "@/components/ui/Buttons";
+import {
+  BackDelateButton,
+  AddButtonBig,
+  ButtonCustom,
+  ButtonExample,
+} from "@/components/ui/Buttons";
 
 interface Routine {
   id: number;
@@ -22,7 +27,14 @@ const RoutineExercisesScreen = () => {
   const { dayID, dayName, routineID, routineName, shouldRefresh } =
     useLocalSearchParams();
 
-    console.log('routineID: ',routineID, 'routineName: ',routineName, 'shouldRefresh: ',shouldRefresh);
+  console.log(
+    "routineID: ",
+    routineID,
+    "routineName: ",
+    routineName,
+    "shouldRefresh: ",
+    shouldRefresh
+  );
   const [routines, setRoutines] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -58,7 +70,7 @@ const RoutineExercisesScreen = () => {
   const goAddExe = () => {
     router.push({
       pathname: "/CreateExercises",
-      params: { dayID, dayName, routineID,routineName },
+      params: { dayID, dayName, routineID, routineName },
     });
   };
 
@@ -70,18 +82,18 @@ const RoutineExercisesScreen = () => {
     );
   }
 
-  console.log(routines, routineID, routineName);
+  console.log("routines.exercises: ", routines.exercises.length);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>EJERCICIOS</Text>
       <View style={{ display: "flex" }}>
-        {Array.isArray(routines?.exercises) && routines.exercises.length > 0 ? (
+        {routines.exercises.length > 0 ? (
           <FlatList
             data={routines.exercises}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity
+              <ButtonCustom
                 onPress={() =>
                   router.push({
                     pathname: "/ViewOneExercise",
@@ -95,25 +107,70 @@ const RoutineExercisesScreen = () => {
                     },
                   })
                 }
-                style={styles.exerciseButton}
-              >
-                <Text style={styles.exerciseText}>{item.name}</Text>
-                <View style={styles.exerciseDecoration} />
-              </TouchableOpacity>
+                textFirst={item.name}
+              />
             )}
             contentContainerStyle={{ paddingBottom: 20 }}
+            ListFooterComponent={
+              routines.exercises.length < 5 ? (
+              <AddButtonBig
+                onPress={goAddExe}
+                text={"add new exercises"}
+                styleContainer={{ marginTop: 20 }}
+              />
+              ) : null
+            }
           />
         ) : (
-          <Text style={styles.noExercisesText}>
-            No hay ejercicios disponibles
-          </Text>
+          <>
+          <ButtonExample textFirst="ejercicio de muestra" />
+          <AddButtonBig
+        onPress={goAddExe}
+        text={"add new exercises"}
+        styleContainer={{ marginTop: 0 }}
+      />
+      </>
         )}
-
-        <AddButtonBig onPress={goAddExe} text="add new exercises" />
       </View>
 
-      {/* <View style={styles.navigationContainer}> */}
-      <BackDelateButton
+
+      {routines.exercises.length < 7 && routines.exercises.length > 4 ? (
+        <BackDelateButton
+          onPressBack={() =>
+            router.push({
+              pathname: "/ViewDay",
+              params: { routineID, routineName, shouldRefresh: "true" },
+            })
+          }
+          onPressDelate={() =>
+            router.push({
+              pathname: "/DelateRoutineExercises",
+              params: { dayID, dayName, routineID, routineName },
+            })
+          }
+          delate={true}
+          onPressAdd={goAddExe}
+          addSmall={true}
+        />
+      ) : (
+        <BackDelateButton
+          onPressBack={() =>
+            router.push({
+              pathname: "/ViewDay",
+              params: { routineID, routineName, shouldRefresh: "true" },
+            })
+          }
+          onPressDelate={() =>
+            router.push({
+              pathname: "/DelateRoutineExercises",
+              params: { dayID, dayName, routineID, routineName },
+            })
+          }
+          delate={true}
+        />
+      )}
+
+      {/* <BackDelateButton
         onPressBack={() =>
           router.push({
             pathname: "/ViewDay",
@@ -127,7 +184,7 @@ const RoutineExercisesScreen = () => {
           })
         }
         delate={true}
-      />
+      /> */}
 
       {/* </View> */}
     </View>
@@ -188,7 +245,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontFamily: "Cochin",
-  }
+  },
 });
 
 export default RoutineExercisesScreen;
