@@ -86,7 +86,7 @@ const RoutineExercisesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>EJERCICIOS</Text>
+      <Text style={{...styles.title,textTransform:'uppercase'}}>{dayName}</Text>
       <View style={{ display: "flex" }}>
         {routines.exercises.length > 0 ? (
           <FlatList
@@ -115,7 +115,8 @@ const RoutineExercisesScreen = () => {
               routines.exercises.length < 5 ? (
               <AddButtonBig
                 onPress={goAddExe}
-                text={"add new exercises"}
+                text={"agregar ejercicio"}
+                // text={"add new exercises"}
                 styleContainer={{ marginTop: 20 }}
               />
               ) : null
@@ -126,7 +127,8 @@ const RoutineExercisesScreen = () => {
           <ButtonExample textFirst="ejercicio de muestra" />
           <AddButtonBig
         onPress={goAddExe}
-        text={"add new exercises"}
+        text={"agregar ejercicio"}
+        // text={"add new exercises"} 
         styleContainer={{ marginTop: 0 }}
       />
       </>
@@ -148,7 +150,7 @@ const RoutineExercisesScreen = () => {
               params: { dayID, dayName, routineID, routineName },
             })
           }
-          delate={true}
+          delate={routines.exercises.length===0?false:true}
           onPressAdd={goAddExe}
           addSmall={true}
         />
@@ -166,7 +168,7 @@ const RoutineExercisesScreen = () => {
               params: { dayID, dayName, routineID, routineName },
             })
           }
-          delate={true}
+          delate={routines.exercises.length===0?false:true}
         />
       )}
 

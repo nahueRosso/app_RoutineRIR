@@ -38,6 +38,15 @@ const CreateDaysScreen = () => {
   const [isMaxDaysReached, setIsMaxDaysReached] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const arr = []
+for (let i = 0; i < exeOptions.length; i++) {
+  let element = exeOptions[i].label;
+  arr.push(element.length)
+  }
+console.log(arr);
+
+
+console.log();
 
   useFocusEffect(useCallback(() => {
     const fetchRoutines = async () => {
@@ -84,7 +93,7 @@ const CreateDaysScreen = () => {
 
   const saveDayRoutine = async () => {
     if (selectedDays.length === 0) {
-      Alert.alert("Error", "Selecciona al menos un día");
+      // Alert.alert("Error", "Selecciona al menos un día");
       return;
     }
     
@@ -108,7 +117,7 @@ const CreateDaysScreen = () => {
       const existingDays = Object.keys(currentRoutine.days);
       const newDaysToAdd = selectedDays.filter(day => !existingDays.includes(day));
       if (existingDays.length + newDaysToAdd.length > 7) {
-        Alert.alert("Error", "No puedes agregar más de 7 días a la rutina");
+        // Alert.alert("Error", "No puedes agregar más de 7 días a la rutina");
         return;
       }
   
@@ -143,7 +152,7 @@ const CreateDaysScreen = () => {
       setSelectedDays([]);
       setSelectedExercises([]);
   
-      Alert.alert("Éxito", "Días y ejercicios agregados a la rutina");
+      // Alert.alert("Éxito", "Días y ejercicios agregados a la rutina");
       router.replace({
         pathname: '/ViewDay',
         params: { 
@@ -153,7 +162,7 @@ const CreateDaysScreen = () => {
         },
       });
     } catch (error) {
-      Alert.alert("Error", "Hubo un problema al guardar");
+      // Alert.alert("Error", "Hubo un problema al guardar");
     }
   };
 
@@ -191,7 +200,7 @@ const CreateDaysScreen = () => {
           ))}
         </View>
 
-        <ButtonCustom onPress={saveDayRoutine} textFirst="Guardar Días" styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton} />
+        <ButtonCustom onPress={saveDayRoutine} textFirst="Guardar Días" styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton} styleText={{color:'#161618'}} styleBox={{backgroundColor:'transparent'}} />
       </ScrollView>
 
 
@@ -260,7 +269,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   saveButton: {
-    backgroundColor: "#28282A",
+    backgroundColor: "#BCFD0E",
     // backgroundColor: "red",
     padding: 15,
     width: "80%",

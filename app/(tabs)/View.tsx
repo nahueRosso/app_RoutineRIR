@@ -73,7 +73,8 @@ const RoutineScreen = () => {
             (
             <AddButtonBig
               onPress={() => router.push("/CreateRoutine")}
-              text={"create new routine"}
+              text={"crear nueva rutina"}
+              // text={"create new routine"}
               styleContainer={{marginTop:20}}
             /> 
           ): null
@@ -84,7 +85,8 @@ const RoutineScreen = () => {
         <ButtonExample textFirst="rutina de ejemplo" />
       <AddButtonBig
         onPress={() => router.push("/CreateRoutine")}
-        text={"create new routine"}
+        text={"crear nueva rutina"}
+        // text={"create new routine"}
         styleContainer={{marginTop:0}}
       />
       </> 
@@ -94,14 +96,14 @@ const RoutineScreen = () => {
         {(routines.length < 15 && routines.length > 4) ? (<BackDelateButton
         onPressBack={() => router.back()}
         onPressDelate={() => router.push("/DelateRoutine")}
-        delate={true}
+        delate={routines.length===0?false:true}
         onPressAdd={() => router.push("/CreateRoutine")}
         addSmall={true}
       />):(
       <BackDelateButton
         onPressBack={() => router.back()}
         onPressDelate={() => router.push("/DelateRoutine")}
-        delate={true}
+        delate={routines.length===0?false:true}
       />)}
       
     </View>

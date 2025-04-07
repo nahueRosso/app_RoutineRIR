@@ -1,20 +1,19 @@
-import React, { useEffect, useState,useCallback } from "react";
-import { 
-  View, 
-  Text, 
-  ActivityIndicator, 
-  StyleSheet, 
-  TouchableOpacity, 
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
   Modal,
   FlatList,
-  Alert
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useRouter,useFocusEffect,useLocalSearchParams } from 'expo-router'
-import { BackDelateButton,ButtonCustom } from "@/components/ui/Buttons";
-
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { BackDelateButton, ButtonCustom } from "@/components/ui/Buttons";
 
 interface Exercise {
   id: string;
@@ -36,8 +35,6 @@ interface Routine {
   days: Day[];
 }
 
-
-
 const DeleteRoutineExercisesScreen = () => {
   const router = useRouter();
   const { dayID, dayName, routineID, routineName } = useLocalSearchParams();
@@ -46,20 +43,24 @@ const DeleteRoutineExercisesScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const fetchRoutines = useCallback(async () => {
     try {
       const storedData = await AsyncStorage.getItem("routines");
       const routinesList: Routine[] = storedData ? JSON.parse(storedData) : [];
       setRoutines(routinesList);
-      
-      const foundRoutine = routinesList.find((item: Routine | any) => item.id === routineID);
+
+      const foundRoutine = routinesList.find(
+        (item: Routine | any) => item.id === routineID
+      );
       if (foundRoutine) {
-        const foundDay = Object.values(foundRoutine.days).find(day => day.id === dayID);
+        const foundDay = Object.values(foundRoutine.days).find(
+          (day) => day.id === dayID
+        );
         setCurrentDay(foundDay || null);
       }
     } catch (error) {
-      Alert.alert("Error", `${error}`);
+      // Alert.alert("Error", `${error}`);
     } finally {
       setLoading(false);
     }
@@ -84,12 +85,14 @@ const DeleteRoutineExercisesScreen = () => {
     if (exerciseToDelete && currentDay) {
       try {
         // Actualizamos las rutinas
-        const updatedRoutines = routines.map((routine:any) => {
+        const updatedRoutines = routines.map((routine: any) => {
           if (routine.id === routineID) {
-            const updatedDays = Object.values(routine.days).map((day:any) => {
+            const updatedDays = Object.values(routine.days).map((day: any) => {
               if (day.id === dayID) {
                 // Filtramos el ejercicio a eliminar
-                const updatedExercises = day.exercises.filter((ex:any) => ex.id !== exerciseToDelete);
+                const updatedExercises = day.exercises.filter(
+                  (ex: any) => ex.id !== exerciseToDelete
+                );
                 return { ...day, exercises: updatedExercises };
               }
               return day;
@@ -100,34 +103,34 @@ const DeleteRoutineExercisesScreen = () => {
         });
 
         await AsyncStorage.setItem("routines", JSON.stringify(updatedRoutines));
-        setRoutines(updatedRoutines); 
+        setRoutines(updatedRoutines);
         const updatedDay = updatedRoutines
-          .find(r => r.id === routineID)
-          ?.days.find((d:any) => d.id === dayID);
+          .find((r) => r.id === routineID)
+          ?.days.find((d: any) => d.id === dayID);
         setCurrentDay(updatedDay || null);
       } catch (error) {
-        Alert.alert("Error", `${error}` );
+        // Alert.alert("Error", `${error}`);
       }
     }
     hideDeleteDialog();
   };
-  
+
   const renderExerciseItem = ({ item }: { item: Exercise }) => (
-    <ButtonCustom onPress={() => showDeleteDialog(item.id)} textFirst={item.name} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
-    // <TouchableOpacity
-    // style={styles.exerciseButton}
-    // onPress={() => showDeleteDialog(item.id)}
-    // >
-    //   <Text style={styles.exerciseButtonText}>{item.name}</Text>
-      
-    //   <View style={styles.deleteIconContainer}>
-    //     <Icon name="delete" size={20} color="#161618" />
-    //   </View>
-      
-    //   <View style={styles.buttonDecorationRed} />
-    // </TouchableOpacity>
+    <ButtonCustom
+      onPress={() => showDeleteDialog(item.id)}
+      textFirst={item.name}
+      styleBox={{ backgroundColor: "#C70000" }}
+      textSecond={
+        <Icon
+          name="delete"
+          size={25}
+          style={{ right: -17, top: 12, zIndex: 2 }}
+          color="#262628"
+        />
+      }
+    />
   );
-  
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -135,8 +138,6 @@ const DeleteRoutineExercisesScreen = () => {
       </View>
     );
   }
-  
-  
 
   return (
     <View style={styles.container}>
@@ -150,7 +151,9 @@ const DeleteRoutineExercisesScreen = () => {
           contentContainerStyle={styles.listContainer}
         />
       ) : (
-        <Text style={styles.noExercisesText}>No hay ejercicios disponibles</Text>
+        <Text style={styles.noExercisesText}>
+          No hay ejercicios disponibles
+        </Text>
       )}
 
       <Modal
@@ -164,16 +167,16 @@ const DeleteRoutineExercisesScreen = () => {
             <Text style={styles.modalText}>
               ¿Estás seguro de que deseas eliminar este ejercicio?
             </Text>
-            
+
             <View style={styles.modalButtons}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={hideDeleteDialog}
               >
                 <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.deleteButtonModal}
                 onPress={confirmDelete}
               >
@@ -184,11 +187,24 @@ const DeleteRoutineExercisesScreen = () => {
         </View>
       </Modal>
 
-      <BackDelateButton onPressBack={() => router.push({ pathname: '/ViewExercises',params: {dayID, dayName, routineID, routineName,shouldRefresh:'true'}})}/>
+      <BackDelateButton
+        onPressBack={() =>
+          router.push({
+            pathname: "/ViewExercises",
+            params: {
+              dayID,
+              dayName,
+              routineID,
+              routineName,
+              shouldRefresh: "true",
+            },
+          })
+        }
+      />
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,

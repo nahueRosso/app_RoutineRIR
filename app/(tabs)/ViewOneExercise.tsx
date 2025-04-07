@@ -6,7 +6,10 @@ import {
   TouchableOpacity, 
   TextInput, 
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform  
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -63,6 +66,30 @@ const RoutineOneExerciseScreen = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+useEffect(() => {
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setKeyboardVisible(true); // Teclado visible
+    }
+  );
+  
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setKeyboardVisible(false); // Teclado oculto
+    }
+  );
+  return () => {
+    keyboardDidShowListener.remove();
+    keyboardDidHideListener.remove();
+  };
+}, []);
+
+
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
@@ -95,7 +122,6 @@ const RoutineOneExerciseScreen = () => {
       loadData();
     }, [execerNameFirst, dayID, execerID]) // ✅ Dependencias correctas
   );
-
 
 
   // Guardar cambios en AsyncStorage
@@ -132,7 +158,7 @@ const RoutineOneExerciseScreen = () => {
       setApi(updatedRoutines[routineIndex].days[dayKey]);
       
     } catch (error:any) {
-      Alert.alert("Error", error.message);
+      // Alert.alert("Error", error.message);
     } finally {
       setIsSaving(false);
     }
@@ -188,7 +214,7 @@ const RoutineOneExerciseScreen = () => {
       });
     } catch (error) {
       console.error("Error al guardar o navegar:", error);
-      Alert.alert("Error", "No se pudo guardar los cambios");
+      // Alert.alert("Error", "No se pudo guardar los cambios");
     }
   };
 
@@ -197,7 +223,10 @@ const RoutineOneExerciseScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={styles.container}
+>
       <Text style={styles.title}>{main.name.toUpperCase()}</Text>
 
       <View style={styles.contentContainer}>
@@ -211,7 +240,7 @@ const RoutineOneExerciseScreen = () => {
         <View style={styles.navigationContainer}>
           <TouchableOpacity 
             onPress={()=>handleExerciseChange('next')}
-            style={styles.navButton}
+            style={api.exercises.length===1?{...styles.navButton,...{visibility:'hidden'}}:{...styles.navButton}}
             disabled={isSaving}
           >
             <Icon name="chevron-left" size={24} color="#A1D70F" />
@@ -219,12 +248,13 @@ const RoutineOneExerciseScreen = () => {
 
           <TouchableOpacity style={styles.imagePlaceholder}>
             <Icon name="add-a-photo" size={24} color="#aaaaaa" />
-            <Text style={styles.imagePlaceholderText}>add image</Text>
+            <Text style={styles.imagePlaceholderText}>agregar imagen</Text>
+            {/* <Text style={styles.imagePlaceholderText}>add image</Text> */}
           </TouchableOpacity>
 
           <TouchableOpacity 
             onPress={() => handleExerciseChange('prev')}
-            style={styles.navButton}
+            style={api.exercises.length===1?{...styles.navButton,...{visibility:'hidden'}}:{...styles.navButton}}
             disabled={isSaving}
           >
             <Icon name="chevron-right" size={24} color="#A1D70F" />
@@ -272,9 +302,11 @@ const RoutineOneExerciseScreen = () => {
             </View>
           ))}
         </View>
+
       </View>
-     <BackDelateButton onPressBack={handleGoBack}/>
-    </View>
+      
+     <BackDelateButton onPressBack={handleGoBack} styleContainer={isKeyboardVisible?{display:'none'}:{display:'flex'}}/>
+    </KeyboardAvoidingView>
   );
 };
 

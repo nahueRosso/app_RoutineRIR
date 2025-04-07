@@ -86,21 +86,16 @@ const RoutineScreen = () => {
 
     <ButtonCustom
       onPress={() => navigateToExercises(day)}
-      textFirst={
-        day.priorityExercises[0] > 9
-          ? day.priorityExercises[1] > 9
-            ? `${day.priorityExercises[0]} - ${day.priorityExercises[0]}`
-            : day.priorityExercises[0]
-          : day.priorityExercises[0]
-      }
+      textFirst={day.priorityExercises[1]?`${day.priorityExercises[0]?.slice(0,7)} - ${day.priorityExercises[1]?.slice(0,7)}`:`${day.priorityExercises[0]?.slice(0,7)}`}
       textSecond={day.name}    />
   );
 
-console.log([...daysArray]);
+// console.log([...daysArray]);
+// console.log('asddasds','eterno'.slice(0,7));
 
   return (
     <View style={styles.container} key={refreshKey}>
-      <Text style={styles.title}>AGREGAR DIAS</Text>
+      <Text style={{...styles.title,textTransform:'uppercase'}}>{routineName}</Text>
       <View style={{ display: "flex" }}>
         {daysArray.length! ? (
           <FlatList
@@ -112,18 +107,20 @@ console.log([...daysArray]);
               daysArray.length < 5 ? (
                 <AddButtonBig
                   onPress={goAddDays}
-                  text={"add new days"}
+                  text={"agregar un nuevo día"}
+                  // text={"add new days"}
                   styleContainer={{ marginTop: 20 }}
-                />
-              ) : null
-            }
-            />
-          ) : (
-            <>
+                  />
+                ) : null
+              }
+              />
+            ) : (
+              <>
             <ButtonExample textFirst="dia de ejemplo" />
             <AddButtonBig
               onPress={goAddDays}
-              text={"add new days"}
+              text={"agregar un nuevo día"}
+              // text={"add new days"}
               styleContainer={{ marginTop: 0 }}
             />
             </>
@@ -134,7 +131,7 @@ console.log([...daysArray]);
         <BackDelateButton
           onPressBack={() => router.push({ pathname: "/View" })}
           onPressDelate={deleteRoutineDay}
-          delate={true}
+          delate={daysArray.length===0?false:true}
           onPressAdd={goAddDays}
           addSmall={true}
         />
@@ -142,7 +139,7 @@ console.log([...daysArray]);
         <BackDelateButton
           onPressBack={() => router.push({ pathname: "/View" })}
           onPressDelate={deleteRoutineDay}
-          delate={true}
+          delate={daysArray.length===0?false:true}
         />
       )}
     </View>

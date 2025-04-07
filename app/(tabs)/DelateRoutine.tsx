@@ -20,7 +20,7 @@ interface Routine {
 
 const DeleteRoutineScreen = () => {
   const router = useRouter();
-  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [routines, setRoutines] = useState<Routine[]>([{id:'',name:''},]);
   const [modalVisible, setModalVisible] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
 
@@ -57,38 +57,33 @@ const DeleteRoutineScreen = () => {
         await AsyncStorage.setItem("routines", JSON.stringify(updatedRoutines));
         setRoutines(updatedRoutines);
       } catch (error) {
-        Alert.alert("Error", "No se pudo eliminar la rutina");
+        // Alert.alert("Error", "No se pudo eliminar la rutina");
       }
     }
     hideDeleteDialog();
   };
 
   const renderRoutineItem = ({ item }: { item: Routine }) => (
-    <ButtonCustom onPress={() => showDeleteDialog(item)} textFirst={item.name} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
-    // <TouchableOpacity
-    //   style={styles.routineButton}
-    //   onPress={() => showDeleteDialog(item)}
-    // >
-    //   <Text style={styles.routineButtonText}>{item.name}</Text>
-      
-    //   <View style={styles.deleteIconContainer}>
-    //     <Icon name="delete" size={20} color="#161618" />
-    //   </View>
-      
-    //   <View style={styles.deleteDecoration} />
-    // </TouchableOpacity>
+    <ButtonCustom onPress={() => showDeleteDialog(item)} textFirst={item.name} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{right:-17,
+      top:12,
+zIndex: 2,}} color="#262628" />} />
   );
+
+console.log(routines);
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ELIMINAR RUTINA</Text>
-
-      <FlatList
+{/* {routines.length===0? */}
+<FlatList
         data={routines}
         renderItem={renderRoutineItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
       />
+      {/* :<Text>Faltan Rutinas</Text>} */}
+      
 
       <Modal
         animationType="fade"

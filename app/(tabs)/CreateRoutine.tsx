@@ -48,7 +48,7 @@ const CreateRoutineScreen = () => {
       }
 
       if (!routineName.trim()) {
-        Alert.alert("Error", "El nombre de la rutina no puede estar vacío.");
+        // Alert.alert("Error", "El nombre de la rutina no puede estar vacío.");
         return;
       }
 
@@ -63,7 +63,7 @@ const CreateRoutineScreen = () => {
       await AsyncStorage.setItem("routines", JSON.stringify(updatedRoutines));
       setRoutinesCount(updatedRoutines.length);
 
-      Alert.alert("Éxito", "Rutina guardada");
+      // Alert.alert("Éxito", "Rutina guardada");
       setRoutineName("");
       router.push({
         pathname: '/View',
@@ -71,7 +71,7 @@ const CreateRoutineScreen = () => {
         // params: { routineName },
       });
     } catch (error) {
-      Alert.alert("Error", "Hubo un problema al guardar la rutina.");
+      // Alert.alert("Error", "Hubo un problema al guardar la rutina.");
     }
   };
 
@@ -93,7 +93,7 @@ const CreateRoutineScreen = () => {
           onChangeText={setRoutineName}
           style={styles.input}
         />
-        <ButtonCustom onPress={saveRoutine} textFirst="Guardar rutina"/>
+        <ButtonCustom onPress={saveRoutine} textFirst="Guardar rutina" styleContainer={{backgroundColor: "#BCFD0E",}} styleText={{color:'#161618'}}/>
       </View>
 
       <Modal
@@ -115,6 +115,7 @@ const CreateRoutineScreen = () => {
           </View>
         </View>
       </Modal>
+               
         <BackDelateButton onPressBack={() => router.push({ pathname: '/View',params: { routineName,shouldRefresh:'true'}})}/>  
       
     </View>

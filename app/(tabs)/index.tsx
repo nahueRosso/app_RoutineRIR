@@ -5,6 +5,7 @@ import {useRouter} from 'expo-router'
 import { NavigationProp } from "@react-navigation/native";
 
 const imageBk = require("../../assets/images/fotoPortada_full.jpg");
+const imageTitle = require("../../assets/images/icon.png");
 
 export default function HomeScreen() {
   
@@ -17,9 +18,17 @@ export default function HomeScreen() {
           resizeMode="cover"
           style={styles.image}
         >
+          <ImageBackground 
+        source={imageTitle} 
+        resizeMode="cover"
+        style={{...styles.image}}
+        >
+        </ImageBackground>
           <View style={styles.textContainer}>
-            <Text style={styles.textH2}>CREATE A WORKOUT PLAN</Text>
-            <Text style={styles.textH1}>TO STAY FIT</Text>
+            <Text style={{...styles.textH2,textTransform:'uppercase'}}>Tu mejor versión</Text>
+            <Text style={{...styles.textH1,textTransform:'uppercase'}}>empieza hoy</Text>
+            {/* <Text style={styles.textH2}>CREATE A WORKOUT PLAN</Text>
+            <Text style={styles.textH1}>TO STAY FIT</Text> */}
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -29,7 +38,7 @@ export default function HomeScreen() {
               // onPress={() => router.push('/View')}
               style={styles.button}
             >
-              <Text style={styles.buttonText}>EMPEZAR</Text>
+              <Text style={{...styles.buttonText,textTransform:'uppercase'}}>empezar</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>

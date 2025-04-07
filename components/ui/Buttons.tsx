@@ -9,6 +9,7 @@ export const BackDelateButton = ({
   onPressAdd = undefined,
   addSmall = false,
   delate = false,
+  styleContainer = Object,
 }: any) => {
   return (
     <View
@@ -23,6 +24,7 @@ export const BackDelateButton = ({
         paddingBottom: 20,
         paddingTop: 20,
         backgroundColor: "#161618",
+        ...styleContainer,
       }}
     >
       <TouchableOpacity
@@ -226,7 +228,7 @@ export const ButtonCustom = ({
       key={daysOptions.find((e: any) => e.label == textSecond)?.key}
       onPress={onPress}
       style={{
-        backgroundColor: "#28282A",
+        backgroundColor: "#28282Aff",
         margin: 10,
         width: "80%",
         maxWidth: 300,
@@ -268,12 +270,10 @@ export const ButtonCustom = ({
           style={{
             color: "black",
             fontSize: 20,
-            fontFamily: "DancingScript",
-            textAlign: "left",
-            fontWeight: "bold",
-            marginRight: -40,
-            marginTop: 0,
-            zIndex: 10000,
+            right:-17,
+            top:12,
+            fontFamily:'DancingScript_700Bold',
+            zIndex: 2,
           }}
         >
           {textSecond?.slice(0, 3)}
@@ -288,7 +288,7 @@ export const ButtonCustom = ({
           right: -60,
           bottom: -20,
           borderRadius: 10,
-          backgroundColor: "#BCFD0E",
+          backgroundColor: "#BCFD0Eff",
           transform: [{ rotate: "25deg" }],
           ...styleBox,
         }}
@@ -297,8 +297,82 @@ export const ButtonCustom = ({
   );
 };
 
-//  dayTag: ,
-// dayTagText: ,
+{/* <TouchableOpacity
+    key={daysOptions.find((e: any) => e.label == textSecond)?.key}
+    onPress={onPress}
+    style={{
+      backgroundColor: "#28282Aff",
+      margin: 10,
+      width: "80%",
+      maxWidth: 300,
+      borderRadius: 10,
+      alignSelf: "center",
+      overflow: "hidden",
+      position: "relative",
+      padding: 15,
+      ...styleContainer,
+    }}
+    disabled={disabled}
+  >
+    <Text
+      style={{
+        color: "white",
+        fontSize: 17,
+        fontFamily: "Cochin",
+        textAlign: "center",
+        fontWeight: "300",
+        textTransform: "capitalize",
+        ...styleText,
+      }}
+    >
+      {textFirst}
+    </Text>
+  
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        height: "100%",
+        width: "30%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {typeof textSecond === 'string' && (
+        <Text
+          style={{
+            color: "black",
+            fontSize: 20,
+            right:-17,
+            top:12,
+            fontFamily: "SpaceMono",
+            fontWeight: "bold",
+            zIndex: 2, // Asegura que esté sobre el cuadro verde
+          }}
+        >
+          {textSecond?.slice(0, 3)}
+        </Text>
+      )}
+    </View>
+  
+    <View
+      style={{
+        position: "absolute",
+        width: 100,
+        height: 100,
+        right: -60,
+        bottom: -20,
+        borderRadius: 10,
+        backgroundColor: "#BCFD0Eff",
+        transform: [{ rotate: "25deg" }],
+        zIndex: 1, // Debajo del texto
+        ...styleBox,
+      }}
+    />
+  </TouchableOpacity> */}
+
+
 
 export const ButtonExample = ({ textFirst }: { textFirst: string }) => {
   return (

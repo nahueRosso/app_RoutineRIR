@@ -92,7 +92,7 @@ const DeleteRoutineDayScreen = () => {
         await AsyncStorage.setItem("routines", JSON.stringify(updatedRoutines));
         setRoutines(updatedRoutines);
       } catch (error) {
-        Alert.alert("Error", "No se pudo eliminar el día");
+        // Alert.alert("Error", "No se pudo eliminar el día");
       }
     }
     hideDeleteDialog();
@@ -101,7 +101,11 @@ const DeleteRoutineDayScreen = () => {
   const renderDayItem = ({ item }: { item: [string, Day] }) => {
     const [dayId, day] = item;
     return (
-      <ButtonCustom onPress={() => showDeleteDialog(routineID, dayId)} textFirst={`${day.name}`} styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{marginRight: -40}} color="#262628" />} />
+      <ButtonCustom onPress={() => showDeleteDialog(routineID, dayId)} 
+      textFirst={day.priorityExercises[1]?`${day.priorityExercises[0]?.slice(0,7)} - ${day.priorityExercises[1]?.slice(0,7)}`:`${day.priorityExercises[0]?.slice(0,7)}`}
+      styleBox={{backgroundColor:'#C70000'}} textSecond={<Icon name="delete" size={25} style={{right:-17,
+        top:12,
+zIndex: 2,}} color="#262628" />} />
     );
   };
 

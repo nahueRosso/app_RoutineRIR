@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback,useEffect } from "react";
 import { 
   View, 
   Text, 
@@ -7,7 +7,8 @@ import {
   StyleSheet, 
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Keyboard,
+  Platform  
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -68,6 +69,32 @@ const CreateDaysScreen = () => {
     }
   }, [routineName]);
 
+
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+useEffect(() => {
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setKeyboardVisible(true); // Teclado visible
+    }
+  );
+  
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setKeyboardVisible(false); // Teclado oculto
+    }
+  );
+  return () => {
+    keyboardDidShowListener.remove();
+    keyboardDidHideListener.remove();
+  };
+}, []);
+
+
+
   useFocusEffect(useCallback(() => {
     fetchRoutines();
   }, [fetchRoutines]));
@@ -94,7 +121,7 @@ const CreateDaysScreen = () => {
 
   const validateRepetition = (text: string) => {
     const num = Number(text);
-    if (text === "" || isNaN(num) || num < 1 || num > 15) {
+    if (text === "" || isNaN(num) || num < 1 || num > 20) {
       setError("Peso debe estar entre 0 y 500");
     } else {
       setError("");
@@ -105,7 +132,7 @@ const CreateDaysScreen = () => {
   const saveExercise = async () => {
     try {
       if (!exeName.trim() || !set.trim() || !weight.trim() || !rir.trim() || error) {
-        Alert.alert("Error", "Todos los campos son obligatorios y deben ser válidos.");
+        // Alert.alert("Error", "Todos los campos son obligatorios y deben ser válidos.");
         return;
       }
   
@@ -114,7 +141,7 @@ const CreateDaysScreen = () => {
   
       const routineIndex = routinesList.findIndex((r: any) => r.name === routineName);
       if (routineIndex === -1) {
-        Alert.alert("Error", "Rutina no encontrada.");
+        // Alert.alert("Error", "Rutina no encontrada.");
         return;
       }
   
@@ -130,7 +157,7 @@ const CreateDaysScreen = () => {
       const currentDay: Day | undefined | any = Object.values(currentRoutine.days).find((day: any) => day.id === dayID);
 
       if (!currentDay) {
-        Alert.alert("Error", "Día no encontrado.");
+        // Alert.alert("Error", "Día no encontrado.");
         return;
       }
       
@@ -154,7 +181,7 @@ const CreateDaysScreen = () => {
   
       await AsyncStorage.setItem("routines", JSON.stringify(routinesList));
       setDays(Object.values(currentRoutine.days));
-      Alert.alert("Éxito", "Ejercicio agregado al día.");
+      // Alert.alert("Éxito", "Ejercicio agregado al día.");
       setExeName("");
       setSet("");
       setWeight("");
@@ -172,7 +199,7 @@ const CreateDaysScreen = () => {
       })
 
     } catch (error) {
-      Alert.alert("Error", "Hubo un problema al guardar el ejercicio.");
+      // Alert.alert("Error", "Hubo un problema al guardar el ejercicio.");
     }
   };
 
@@ -181,10 +208,10 @@ const CreateDaysScreen = () => {
     parseFloat(weight) < 0 || parseFloat(weight) > 500;
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+     <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={styles.container}
+>
       <Text style={styles.title}>CREAR EJERCICIOS</Text>
 
       <View style={styles.formContainer}>
@@ -215,7 +242,7 @@ const CreateDaysScreen = () => {
         />
         
         <TextInput
-          placeholder="repes (1-15)"
+          placeholder="repes (1-20)"
           placeholderTextColor="#888"
           value={repetition}
           onChangeText={validateRepetition}
@@ -235,7 +262,7 @@ const CreateDaysScreen = () => {
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
 
-        <ButtonCustom onPress={saveExercise} textFirst="Guardar Ejercicio" disabled={isSaveDisabled} styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton}/>
+        <ButtonCustom onPress={saveExercise} textFirst="Guardar Ejercicio" disabled={isSaveDisabled} styleContainer={isSaveDisabled?{...styles.saveButton,...styles.disabledButton}:styles.saveButton} styleText={{color:'#161618'}} styleBox={{backgroundColor:'transparent'}}/>
         
       </View>
 
@@ -249,10 +276,10 @@ const CreateDaysScreen = () => {
             routineName,
           },
         })
-      }/>
+      } styleContainer={isKeyboardVisible?{display:'none'}:{display:'flex'}}/>
       
       
-    </KeyboardAvoidingView>
+   </KeyboardAvoidingView>
   );
 };
 
@@ -294,7 +321,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   saveButton: {
-    backgroundColor: "#28282A",
+    backgroundColor: "#BCFD0E",
     marginVertical: 10,
     width: "80%",
     maxWidth: 300,
