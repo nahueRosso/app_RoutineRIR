@@ -9,14 +9,12 @@ export const daysOptions = [
   ];
   
   export const exeOptions = [
-    { label: "Pecho", value: "Pecho" },
-    { label: "Espalda", value: "Espalda" },
-    { label: "Biceps", value: "Biceps" },
-    { label: "Triceps", value: "Triceps" },
-    { label: "Hombros", value: "Hombros" },
-    { label: "Abdominales", value: "Abdominales" },
-    { label: "Cuadriceps", value: "Cuadriceps" },
-    { label: "Isquiotibiales", value: "Isquiotibiales" },
-    { label: "Glúteos", value: "Glúteos" },
-    { label: "Gemelos", value: "Gemelos" },
+    { label: "pecho", value: "pecho" },
+    { label: "espalda", value: "espalda" },
+    { label: "hombros", value: "hombros" },
+    { label: "bíceps", value: "bíceps" },
+    { label: "tríceps", value: "tríceps" },
+    { label: "abdominales", value: "abdominales" },
+    { label: "piernas", value: "piernas" },
+    { label: "gemelos", value: "gemelos" },
   ];

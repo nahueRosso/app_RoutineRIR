@@ -1,0 +1,233 @@
+[
+    {
+      "id": "rutina-gym-001",
+      "name": "Rutina full body",
+      "days": [
+        {
+          "id": "rutina-gym-001-Lunes",
+          "name": "Lunes",
+          "key": 1,
+          "priorityExercises": ["Pecho", "Tríceps"],
+          "exercises": [
+            {
+              "id": "ej1",
+              "name": "Press banca",
+              "sets": 4,
+              "weight": 60,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [60, 60, 60, 60],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            },
+            {
+              "id": "ej2",
+              "name": "Press inclinado con mancuernas",
+              "sets": 3,
+              "weight": 20,
+              "repetition": 12,
+              "rir": 1,
+              "arrSetWeight": [20, 20, 20],
+              "arrSetRepetition": [12, 12, 12],
+              "arrSetRIR": [1, 1, 1]
+            },
+            {
+              "id": "ej3",
+              "name": "Fondos en paralelas",
+              "sets": 3,
+              "weight": 0,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [0, 0, 0],
+              "arrSetRepetition": [10, 10, 10],
+              "arrSetRIR": [2, 2, 2]
+            }
+          ]
+        },
+        {
+          "id": "rutina-gym-001-Martes",
+          "name": "Martes",
+          "key": 2,
+          "priorityExercises": ["Espalda", "Bíceps"],
+          "exercises": [
+            {
+              "id": "ej4",
+              "name": "Dominadas",
+              "sets": 4,
+              "weight": 0,
+              "repetition": 8,
+              "rir": 1,
+              "arrSetWeight": [0, 0, 0, 0],
+              "arrSetRepetition": [8, 8, 8, 8],
+              "arrSetRIR": [1, 1, 1, 1]
+            },
+            {
+              "id": "ej5",
+              "name": "Remo con barra",
+              "sets": 4,
+              "weight": 50,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [50, 50, 50, 50],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            },
+            {
+              "id": "ej6",
+              "name": "Curl bíceps con barra",
+              "sets": 3,
+              "weight": 30,
+              "repetition": 12,
+              "rir": 1,
+              "arrSetWeight": [30, 30, 30],
+              "arrSetRepetition": [12, 12, 12],
+              "arrSetRIR": [1, 1, 1]
+            }
+          ]
+        },
+        {
+          "id": "rutina-gym-001-Miércoles",
+          "name": "Miércoles",
+          "key": 3,
+          "priorityExercises": ["Cuádriceps", "Glúteos"],
+          "exercises": [
+            {
+              "id": "ej7",
+              "name": "Sentadillas",
+              "sets": 4,
+              "weight": 70,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [70, 70, 70, 70],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            },
+            {
+              "id": "ej8",
+              "name": "Prensa 45°",
+              "sets": 3,
+              "weight": 100,
+              "repetition": 12,
+              "rir": 1,
+              "arrSetWeight": [100, 100, 100],
+              "arrSetRepetition": [12, 12, 12],
+              "arrSetRIR": [1, 1, 1]
+            },
+            {
+              "id": "ej9",
+              "name": "Hip Thrust",
+              "sets": 4,
+              "weight": 60,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [60, 60, 60, 60],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            }
+          ]
+        },
+        {
+          "id": "rutina-gym-001-Jueves",
+          "name": "Jueves",
+          "key": 4,
+          "priorityExercises": ["Hombros", "Abdominales"],
+          "exercises": [
+            {
+              "id": "ej10",
+              "name": "Press militar",
+              "sets": 4,
+              "weight": 40,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [40, 40, 40, 40],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            },
+            {
+              "id": "ej11",
+              "name": "Elevaciones laterales",
+              "sets": 3,
+              "weight": 8,
+              "repetition": 15,
+              "rir": 1,
+              "arrSetWeight": [8, 8, 8],
+              "arrSetRepetition": [15, 15, 15],
+              "arrSetRIR": [1, 1, 1]
+            },
+            {
+              "id": "ej12",
+              "name": "Crunch en máquina",
+              "sets": 3,
+              "weight": 20,
+              "repetition": 20,
+              "rir": 2,
+              "arrSetWeight": [20, 20, 20],
+              "arrSetRepetition": [20, 20, 20],
+              "arrSetRIR": [2, 2, 2]
+            }
+          ]
+        },
+        {
+          "id": "rutina-gym-001-Viernes",
+          "name": "Viernes",
+          "key": 5,
+          "priorityExercises": ["Full body", "Cardio"],
+          "exercises": [
+            {
+              "id": "ej13",
+              "name": "Peso muerto rumano",
+              "sets": 4,
+              "weight": 60,
+              "repetition": 10,
+              "rir": 2,
+              "arrSetWeight": [60, 60, 60, 60],
+              "arrSetRepetition": [10, 10, 10, 10],
+              "arrSetRIR": [2, 2, 2, 2]
+            },
+            {
+              "id": "ej14",
+              "name": "Mountain climbers",
+              "sets": 4,
+              "weight": 0,
+              "repetition": 30,
+              "rir": 1,
+              "arrSetWeight": [0, 0, 0, 0],
+              "arrSetRepetition": [30, 30, 30, 30],
+              "arrSetRIR": [1, 1, 1, 1]
+            }
+          ]
+        },
+        {
+          "id": "rutina-gym-001-Sábado",
+          "name": "Sábado",
+          "key": 6,
+          "priorityExercises": ["Femoral"],
+          "exercises": [
+            {
+              "id": "ej15",
+              "name": "Curl femoral acostado",
+              "sets": 3,
+              "weight": 40,
+              "repetition": 12,
+              "rir": 2,
+              "arrSetWeight": [40, 40, 40],
+              "arrSetRepetition": [12, 12, 12],
+              "arrSetRIR": [2, 2, 2]
+            },
+            {
+              "id": "ej16",
+              "name": "Plancha",
+              "sets": 3,
+              "weight": 0,
+              "repetition": 60,
+              "rir": 1,
+              "arrSetWeight": [0, 0, 0],
+              "arrSetRepetition": [60, 60, 60],
+              "arrSetRIR": [1, 1, 1]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  

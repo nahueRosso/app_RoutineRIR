@@ -54,7 +54,7 @@ const RoutineOneExerciseScreen = () => {
   const router = useRouter();
   const { routineID, routineName,execerID ,execerName, dayID, execerNameFirst } = useLocalSearchParams();
   const [dayName,setDayName] = useState<string>('')
-  console.log('routineID: ',routineID, 'routineName: ',routineName,);
+  // console.log('routineID: ',routineID, 'routineName: ',routineName,);
   const [api, setApi] = useState<ApiData | any>();
   // const [api, setApi] = useState<{exercises: Exercise[]}>({ exercises: [] });
   const [main, setMain] = useState<Exercise | undefined>();
@@ -225,9 +225,12 @@ useEffect(() => {
   return (
     <KeyboardAvoidingView
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-  style={styles.container}
+  style={[styles.container, {flex: 1}]} 
+  keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} 
 >
-      <Text style={styles.title}>{main.name.toUpperCase()}</Text>
+      {/* <Text style={styles.title}>{main.name.toUpperCase()}</Text> */}
+      <Text style={styles.title}>{' '}</Text>
+      <Text style={{...styles.title,...{position:'absolute',width:'110%',marginTop:40}}}>{main.name.toUpperCase()}</Text>
 
       <View style={styles.contentContainer}>
         <View style={styles.exerciseCounter}>
@@ -240,13 +243,20 @@ useEffect(() => {
         <View style={styles.navigationContainer}>
           <TouchableOpacity 
             onPress={()=>handleExerciseChange('next')}
-            style={api.exercises.length===1?{...styles.navButton,...{visibility:'hidden'}}:{...styles.navButton}}
+            style={
+              api.exercises.length === 1 
+                ? {...styles.navButton, display: 'none'} 
+                : {...styles.navButton, display: 'flex'}
+            }
             disabled={isSaving}
           >
             <Icon name="chevron-left" size={24} color="#A1D70F" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.imagePlaceholder}>
+          <TouchableOpacity style={api.exercises.length === 1 
+                ? {...styles.imagePlaceholder, ...{marginHorizontal:'18%'}} 
+                : {...styles.imagePlaceholder}
+            }>
             <Icon name="add-a-photo" size={24} color="#aaaaaa" />
             <Text style={styles.imagePlaceholderText}>agregar imagen</Text>
             {/* <Text style={styles.imagePlaceholderText}>add image</Text> */}
@@ -254,7 +264,11 @@ useEffect(() => {
 
           <TouchableOpacity 
             onPress={() => handleExerciseChange('prev')}
-            style={api.exercises.length===1?{...styles.navButton,...{visibility:'hidden'}}:{...styles.navButton}}
+            style={
+              api.exercises.length === 1 
+                ? {...styles.navButton, display: 'none'} 
+                : {...styles.navButton, display: 'flex'}
+            }
             disabled={isSaving}
           >
             <Icon name="chevron-right" size={24} color="#A1D70F" />
@@ -289,7 +303,7 @@ useEffect(() => {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>RIR</Text>
+        <Text style={{...styles.sectionTitle}}>RIR</Text>
         <View style={styles.inputContainer}>
           {rirs.map((rir: any, idx: any) => (
             <View key={idx} style={styles.inputWrapper}>

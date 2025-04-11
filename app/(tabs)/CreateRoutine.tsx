@@ -5,7 +5,8 @@ import {
   TextInput, 
   TouchableOpacity, 
   StyleSheet, 
-  Alert,
+  Platform,
+  KeyboardAvoidingView,
   Modal
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -82,26 +83,35 @@ const CreateRoutineScreen = () => {
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>AGREGAR RUTINA</Text>
-      
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Nombre de la rutina"
-          placeholderTextColor="#888"
-          value={routineName}
-          onChangeText={setRoutineName}
-          style={styles.input}
-        />
-        <ButtonCustom onPress={saveRoutine} textFirst="Guardar rutina" styleContainer={{backgroundColor: "#BCFD0E",}} styleText={{color:'#161618'}}/>
-      </View>
+    <KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  style={{flex: 1, backgroundColor: '#161618'}}
+>
+  <View style={styles.container}>
+    <Text style={styles.title}>AGREGAR RUTINA</Text>
+    
+    <View style={styles.inputContainer}>
+      <TextInput
+        placeholder="Nombre de la rutina"
+        placeholderTextColor="#888"
+        value={routineName}
+        onChangeText={setRoutineName}
+        style={styles.input}
+      />
+      <ButtonCustom 
+        onPress={saveRoutine} 
+        textFirst="Guardar rutina" 
+        styleContainer={{backgroundColor: "#BCFD0E"}} 
+        styleText={{color:'#161618'}}
+      />
+    </View>
 
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
-      >
+        >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>¡Llegaste al máximo de rutinas (7)!</Text>
@@ -109,7 +119,7 @@ const CreateRoutineScreen = () => {
             <TouchableOpacity
               style={styles.modalButton}
               onPress={goToDeleteRoutine}
-            >
+              >
               <Text style={styles.modalButtonText}>Eliminar Rutina</Text>
             </TouchableOpacity>
           </View>
@@ -118,7 +128,8 @@ const CreateRoutineScreen = () => {
                
         <BackDelateButton onPressBack={() => router.push({ pathname: '/View',params: { routineName,shouldRefresh:'true'}})}/>  
       
-    </View>
+</View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -138,18 +149,28 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   inputContainer: {
-    marginTop:10,
+    // marginTop:0,
+    marginVertical:'30%',
+    backgroundColor: "#28282A",
+    height:'35%',
+    width:'90%',
+    margin:'5%',
     display:'flex',
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    left:0,
+    right:0,
+    top:0,
+    bottom:0,
+    borderRadius:10,
   },
   input: {
-    backgroundColor: "#28282A",
+    backgroundColor: "#161618",
     color: "white",
     padding: 15,
     borderRadius: 10,
     marginHorizontal:'10%',
-    width: "70%",
+    width: "80%",
     marginBottom: 16,
     fontFamily: "Cochin",
   },

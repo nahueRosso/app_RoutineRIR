@@ -2,10 +2,8 @@ import React, { useEffect, useState,useCallback } from "react";
 import { View, Dimensions, StyleSheet, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import {useRouter} from 'expo-router'
-import { NavigationProp } from "@react-navigation/native";
 
 const imageBk = require("../../assets/images/fotoPortada_full.jpg");
-const imageTitle = require("../../assets/images/icon.png");
 
 export default function HomeScreen() {
   
@@ -18,17 +16,11 @@ export default function HomeScreen() {
           resizeMode="cover"
           style={styles.image}
         >
-          <ImageBackground 
-        source={imageTitle} 
-        resizeMode="cover"
-        style={{...styles.image}}
-        >
-        </ImageBackground>
+         
           <View style={styles.textContainer}>
             <Text style={{...styles.textH2,textTransform:'uppercase'}}>Tu mejor versión</Text>
             <Text style={{...styles.textH1,textTransform:'uppercase'}}>empieza hoy</Text>
-            {/* <Text style={styles.textH2}>CREATE A WORKOUT PLAN</Text>
-            <Text style={styles.textH1}>TO STAY FIT</Text> */}
+            
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity

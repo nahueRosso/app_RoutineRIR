@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  ScrollView
+  Platform
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -16,11 +16,18 @@ import {
   ButtonCustom,
   ButtonExample
 } from "@/components/ui/Buttons";
+import db from '../../db.json'
+import { Image } from 'expo-image';
+
+
+// import {images_obj} from "@/components/Exercise";
+import {images_obj} from "@/constants/Exercise";
 
 interface Routine {
   id: number;
   name: string;
 }
+
 
 const RoutineScreen = () => {
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -31,6 +38,7 @@ const RoutineScreen = () => {
       const storedData = await AsyncStorage.getItem("routines");
       const routinesList: Routine[] = storedData ? JSON.parse(storedData) : [];
       setRoutines(routinesList);
+      
     } catch (error) {
       console.error("Error loading routines:", error);
     }
@@ -41,6 +49,8 @@ const RoutineScreen = () => {
       fetchRoutines();
     }, [fetchRoutines])
   );
+
+
 
   const renderRoutineItem = ({ item }: { item: Routine }) => (
     <ButtonCustom
@@ -54,7 +64,18 @@ const RoutineScreen = () => {
     />
   );
 
-  console.log(routines.length);
+
+
+  const getImageSource = (imageKey: keyof typeof images_obj) => {
+    const image = images_obj[imageKey];
+    
+    // Manejo especial para web
+    if (Platform.OS === 'web') {
+      return { uri: image.default || image };
+    }
+    
+    return typeof image === 'number' ? image : { uri: image };
+  };
 
   return (
     <View style={styles.container}>
@@ -92,8 +113,9 @@ const RoutineScreen = () => {
       </> 
       )}
 
+
     </View>
-        {(routines.length < 15 && routines.length > 4) ? (<BackDelateButton
+        {(routines.length < 12 && routines.length > 4) ? (<BackDelateButton
         onPressBack={() => router.back()}
         onPressDelate={() => router.push("/DelateRoutine")}
         delate={routines.length===0?false:true}

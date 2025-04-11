@@ -27,14 +27,6 @@ const RoutineExercisesScreen = () => {
   const { dayID, dayName, routineID, routineName, shouldRefresh } =
     useLocalSearchParams();
 
-  console.log(
-    "routineID: ",
-    routineID,
-    "routineName: ",
-    routineName,
-    "shouldRefresh: ",
-    shouldRefresh
-  );
   const [routines, setRoutines] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -69,10 +61,11 @@ const RoutineExercisesScreen = () => {
 
   const goAddExe = () => {
     router.push({
-      pathname: "/CreateExercises",
+      pathname: "/ChooseCreateCreated",
       params: { dayID, dayName, routineID, routineName },
     });
   };
+  
 
   if (loading) {
     return (
@@ -87,7 +80,7 @@ const RoutineExercisesScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={{...styles.title,textTransform:'uppercase'}}>{dayName}</Text>
-      <View style={{ display: "flex" }}>
+      <View style={{ display: "flex",marginBottom: 80, }}>
         {routines.exercises.length > 0 ? (
           <FlatList
             data={routines.exercises}

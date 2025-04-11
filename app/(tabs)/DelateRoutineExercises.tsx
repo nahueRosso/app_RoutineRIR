@@ -142,7 +142,10 @@ const DeleteRoutineExercisesScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ELIMINAR EJERCICIOS</Text>
-
+<View style={{
+          flex: 1,  // Esto es crucial
+          marginBottom: 80,  // Espacio para los botones inferiores
+        }}>
       {currentDay?.exercises?.length ? (
         <FlatList
           data={currentDay.exercises}
@@ -151,10 +154,10 @@ const DeleteRoutineExercisesScreen = () => {
           contentContainerStyle={styles.listContainer}
         />
       ) : (
-        <Text style={styles.noExercisesText}>
-          No hay ejercicios disponibles
-        </Text>
+        <>
+        </>
       )}
+</View>
 
       <Modal
         animationType="fade"

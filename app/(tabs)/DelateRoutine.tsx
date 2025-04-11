@@ -75,15 +75,17 @@ console.log(routines);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ELIMINAR RUTINA</Text>
-{/* {routines.length===0? */}
+      <View style={{
+          flex: 1,  // Esto es crucial
+          marginBottom: 80,  // Espacio para los botones inferiores
+        }}>
 <FlatList
         data={routines}
         renderItem={renderRoutineItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
       />
-      {/* :<Text>Faltan Rutinas</Text>} */}
-      
+      </View>
 
       <Modal
         animationType="fade"

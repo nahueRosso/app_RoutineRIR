@@ -36,6 +36,7 @@ export const BackDelateButton = ({
           borderRadius: 30,
           justifyContent: "center",
           alignItems: "center",
+          zIndex:10000000,
         }}
       >
         <Icon name="arrow-back" size={25} color="#161618" />
@@ -177,6 +178,7 @@ export const AddButtonBig = ({
     </TouchableOpacity>
   );
 };
+
 export const AddButtonSmall = ({ onPress }: { onPress: any }) => {
   return (
     <TouchableOpacity
@@ -214,14 +216,6 @@ export const ButtonCustom = ({
   disabled?: any;
   delate?: any;
 }) => {
-//   console.log(
-//     "textFirst: ",
-//     textFirst,
-//     "textSecond: ",
-//     textSecond,
-//     daysOptions.find((e: any) => e.label == textSecond)?.key
-//   );
-// console.log('textSecond;  ',textSecond);
 
   return (
     <TouchableOpacity
@@ -252,7 +246,7 @@ export const ButtonCustom = ({
           ...styleText,
         }}
       >
-        {textFirst}
+        {textFirst.length>19 ?`${textFirst.slice(0,19)}...`:textFirst.slice(0,19)}
       </Text>
       <View
         style={{
@@ -269,14 +263,15 @@ export const ButtonCustom = ({
         {typeof textSecond === 'string'?<Text
           style={{
             color: "black",
-            fontSize: 20,
-            right:-17,
-            top:12,
-            fontFamily:'DancingScript_700Bold',
-            zIndex: 2,
+            fontSize: 18,
+            right:-15,
+            top:15,
+            fontFamily:'Satisfy-Regular',
+            textTransform:'capitalize',
+            zIndex: 2000000000,
           }}
         >
-          {textSecond?.slice(0, 3)}
+          {` ${textSecond?.slice(0, 3)}`}
         </Text>:(typeof textSecond === 'undefined')?<></>:textSecond}
       </View>
 
@@ -296,82 +291,6 @@ export const ButtonCustom = ({
     </TouchableOpacity>
   );
 };
-
-{/* <TouchableOpacity
-    key={daysOptions.find((e: any) => e.label == textSecond)?.key}
-    onPress={onPress}
-    style={{
-      backgroundColor: "#28282Aff",
-      margin: 10,
-      width: "80%",
-      maxWidth: 300,
-      borderRadius: 10,
-      alignSelf: "center",
-      overflow: "hidden",
-      position: "relative",
-      padding: 15,
-      ...styleContainer,
-    }}
-    disabled={disabled}
-  >
-    <Text
-      style={{
-        color: "white",
-        fontSize: 17,
-        fontFamily: "Cochin",
-        textAlign: "center",
-        fontWeight: "300",
-        textTransform: "capitalize",
-        ...styleText,
-      }}
-    >
-      {textFirst}
-    </Text>
-  
-    <View
-      style={{
-        position: "absolute",
-        top: 0,
-        right: 0,
-        height: "100%",
-        width: "30%",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {typeof textSecond === 'string' && (
-        <Text
-          style={{
-            color: "black",
-            fontSize: 20,
-            right:-17,
-            top:12,
-            fontFamily: "SpaceMono",
-            fontWeight: "bold",
-            zIndex: 2, // Asegura que esté sobre el cuadro verde
-          }}
-        >
-          {textSecond?.slice(0, 3)}
-        </Text>
-      )}
-    </View>
-  
-    <View
-      style={{
-        position: "absolute",
-        width: 100,
-        height: 100,
-        right: -60,
-        bottom: -20,
-        borderRadius: 10,
-        backgroundColor: "#BCFD0Eff",
-        transform: [{ rotate: "25deg" }],
-        zIndex: 1, // Debajo del texto
-        ...styleBox,
-      }}
-    />
-  </TouchableOpacity> */}
-
 
 
 export const ButtonExample = ({ textFirst }: { textFirst: string }) => {

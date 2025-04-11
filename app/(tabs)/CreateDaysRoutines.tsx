@@ -264,6 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',  // Esto coloca los hijos en fila
     flexWrap: 'wrap',      // Permite que los elementos pasen a la siguiente línea si no caben
     gap: 8,      
+    justifyContent:'space-between',
     marginHorizontal:'10%',          // Espacio entre elementos (React Native 0.71+)
     marginBottom: 20,
     marginTop: 10,

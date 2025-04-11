@@ -37,7 +37,7 @@
       [
         "expo-font",
         {
-          "fonts": []
+          "fonts": ["./assets/fonts/Satisfy-Regular.ttf"]
         }
       ]
     ],  

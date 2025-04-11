@@ -5,28 +5,52 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
-// import DancingScript from '../assets/fonts/DancingScript-Bold.ttf';
 import { useFonts } from 'expo-font';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import db from "../db.json"; // asegurate de que el path esté correcto
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  
+
   const [fontsLoaded, error] = useFonts({
-    // 'DancingScript_700Bold': require('../assets/fonts/DancingScript-Bold.ttf'),
+    'Satisfy-Regular': require('../assets/fonts/Satisfy-Regular.ttf'),
   });
 
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
+  // 👇 Hook que carga rutinas solo la primera vez (debe ir antes del return)
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const isFirstLaunch = await AsyncStorage.getItem("isFirstLaunch");
+
+        if (isFirstLaunch === null) {
+          if (db && db.length > 0) {
+            await AsyncStorage.setItem("routines", JSON.stringify(db));
+            console.log("✅ RUTINAS DE EJEMPLO GUARDADAS");
+          }
+          await AsyncStorage.setItem("isFirstLaunch", "false");
+        }
+      } catch (error) {
+        console.error("❌ Error en la carga inicial:", error);
+      }
+    };
+
+    loadInitialData();
+  }, []);
+
+  // 👇 Hook para ocultar la splash screen una vez que las fuentes cargan
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
+  // 👇 Esto debe ir DESPUÉS de todos los hooks
   if (!fontsLoaded) {
     return null;
   }
