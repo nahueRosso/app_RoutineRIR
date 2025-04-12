@@ -43,10 +43,6 @@ for (let i = 0; i < exeOptions.length; i++) {
   let element = exeOptions[i].label;
   arr.push(element.length)
   }
-console.log(arr);
-
-
-console.log();
 
   useFocusEffect(useCallback(() => {
     const fetchRoutines = async () => {
