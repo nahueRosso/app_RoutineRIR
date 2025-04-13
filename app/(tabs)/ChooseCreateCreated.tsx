@@ -13,13 +13,16 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const RoutineExercisesScreen = () => {
   const router = useRouter();
-const { dayID, dayName, routineID, routineName  } =
+const { dayID, dayName, routineID, routineName,exercises  } =
     useLocalSearchParams();
 
+
+    console.log(exercises);
+    
     const goAddExe = () => {
         router.push({
           pathname: "/CreateExercises",
-          params: { dayID, dayName, routineID, routineName },
+          params: { dayID, dayName, routineID, routineName},
         });
       };
 
@@ -30,7 +33,7 @@ const { dayID, dayName, routineID, routineName  } =
           
           <TouchableOpacity style={styles.imagePlaceholder} onPress={() => router.push({
           pathname: "/ExercisesSerch",
-          params: { dayID, dayName, routineID, routineName },
+          params: { dayID, dayName, routineID, routineName,exercises },
         })}>
                    <Icon name="format-list-bulleted" size={40} color="#aaaaaa" />
                    <Text style={styles.imagePlaceholderText}>lista de ejercicios</Text>
@@ -49,7 +52,7 @@ const { dayID, dayName, routineID, routineName  } =
           onPressBack={() =>
             router.push({
               pathname: "/ViewExercises",
-              params: { dayID, dayName, routineID, routineName , shouldRefresh: "true" },
+              params: { dayID, dayName, routineID, routineName , shouldRefresh: "true" ,exercises},
             })
           }
           delate={false}

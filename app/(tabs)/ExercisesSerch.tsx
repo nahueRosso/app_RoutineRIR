@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,21 +25,84 @@ const groupsDic = {
   calves: "gemelos",
 };
 
-const RoutineScreen = () => {
-  const router = useRouter();
-  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
-  const [serchArr, setSerchArr] = useState([]);
-  const { dayID, dayName, routineID, routineName } = useLocalSearchParams();
+const uuidList = [
+  '86dc1969-5c7d-4753-b1c6-70bd80dd3d71', // 0 - pecho
+  '6b87b3aa-59a5-41bc-b8bc-1c0f021aa97b', // 1 - espalda
+  '7a263ea0-4297-4e05-96ec-ea6956756096', // 2 - hombros
+  'ceee26af-1e13-4497-936c-9e661d9a7699', // 3 - bíceps
+  '65af18e0-3287-4abd-ab7e-ae3fa979af72', // 4 - tríceps
+  'a9be2bfa-b424-48b6-a95a-db9a460fb4b2', // 5 - abdominales
+  'fe328f8b-c915-46c0-b09e-5826411da488', // 6 - piernas
+  '69c95b4e-78a7-482e-b9e8-44b2feff4376', // 7 - gemelos
+];
 
+const RoutineScreen = () => {
+  
+  const toArray = (input: string | string[]): number[] => {
+    const values = typeof input === 'string'
+      ? input.split(',').map(s => s.trim())
+      : input;
+
+    return values
+      .map(val => {
+        const index = Object.values(groupsDic).indexOf(val);
+        return index !== -1 ? index : null;
+      })
+      .filter((i): i is number => i !== null); // filtramos los que no matchean
+  };
+
+  const getUUIDsFromMuscleGroup = (input: string | string[]): string[] => {
+    const values = typeof input === 'string'
+      ? input.split(',').map(s => s.trim())
+      : input;
+  
+    return values
+      .map(val => Object.values(groupsDic).indexOf(val))
+      .filter((i): i is number => i !== -1)
+      .map(i => uuidList[i]);
+  };
+
+  
+  const router = useRouter();
+  const { dayID, dayName, routineID, routineName,exercises } = useLocalSearchParams();
+  
+
+  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const [serchArr, setSerchArr] = useState<number[]>([]);
+  
+  // ✅ Apenas exercises esté disponible o cambie, seteamos los estados
+  useEffect(() => {
+    console.log("Ejecutando useEffect con exercises: ", exercises);
+    if (exercises) {
+      setSelectedExercises(getUUIDsFromMuscleGroup(exercises));
+      setSerchArr(toArray(exercises));
+    }
+  }, [exercises]);
+  
+  // console.log('exercises: ',exercises,'selectedExercises: ',selectedExercises,'serchArr: :',serchArr);
   const getImageSource = (imageKey: keyof typeof images_obj) => {
     const image = images_obj[imageKey];
-
+  
     if (Platform.OS === "web") {
-      return { uri: image.default || image };
+      // Si image es un objeto con una propiedad `default`, devolvémosla
+      if (typeof image === 'object' && image !== null && 'default' in image) {
+        return { uri: image.default };
+      }
+  
+      // Si image es un string (una URL o ruta), devolverlo directo
+      if (typeof image === 'string') {
+        return { uri: image };
+      }
+  
+      // console.warn(`Formato de imagen no soportado en web:`, image);
+      return undefined; // o una imagen fallback
     }
-
+  
+    // Mobile puede usar require()
     return typeof image === "number" ? image : { uri: image };
   };
+  
+  
 
   const toggleExerciseSelection = (exeValue: string, exeName: string) => {
     setSelectedExercises((prev) =>
@@ -58,13 +121,32 @@ const RoutineScreen = () => {
     );
   };
 
+const backButton = () =>{
+   
+  router.push({
+      pathname: "/ChooseCreateCreated",
+      params: {
+        dayID,
+        dayName,
+        routineID,
+        routineName,
+        shouldRefresh: "true",
+        exercises
+      },
+    })
+  
+}
+
+ console.log('asdsasadds: ',serchArr);
+ 
+
   return (
     <View style={styles.container}>
       <Text style={{ ...styles.title, textTransform: "uppercase" }}>
         Lista de Ejercisios
       </Text>
       <ScrollView
-        style={{ marginBottom: 8 }}
+        style={{ marginBottom: -20 }}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         <View
@@ -82,8 +164,6 @@ const RoutineScreen = () => {
             <CustomCheckboxSmall
               key={exercise.id}
               label={groupsDic[exercise.nameExe as keyof typeof groupsDic]}
-              //   checked={bool}
-              //   onPress={() => setBool(true)}
               checked={selectedExercises.includes(exercise.id)}
               onPress={() =>
                 toggleExerciseSelection(exercise.id, exercise.nameExe)
@@ -134,18 +214,7 @@ const RoutineScreen = () => {
       </ScrollView>
 
       <BackDelateButton
-        onPressBack={() =>
-          router.push({
-            pathname: "/ChooseCreateCreated",
-            params: {
-              dayID,
-              dayName,
-              routineID,
-              routineName,
-              shouldRefresh: "true",
-            },
-          })
-        }
+        onPressBack={backButton}
         styleContainer={{ backgroundColor: "transparent" }}
         delate={false}
       />

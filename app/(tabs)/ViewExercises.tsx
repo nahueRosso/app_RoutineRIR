@@ -24,7 +24,7 @@ interface Routine {
 
 const RoutineExercisesScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineID, routineName, shouldRefresh } =
+  const { dayID, dayName, routineID, routineName, shouldRefresh,exercises } =
     useLocalSearchParams();
 
   const [routines, setRoutines] = useState<any | null>(null);
@@ -62,7 +62,7 @@ const RoutineExercisesScreen = () => {
   const goAddExe = () => {
     router.push({
       pathname: "/ChooseCreateCreated",
-      params: { dayID, dayName, routineID, routineName },
+      params: { dayID, dayName, routineID, routineName,exercises },
     });
   };
   
@@ -134,7 +134,7 @@ const RoutineExercisesScreen = () => {
           onPressBack={() =>
             router.push({
               pathname: "/ViewDay",
-              params: { routineID, routineName, shouldRefresh: "true" },
+              params: { routineID, routineName, shouldRefresh: "true",exercises },
             })
           }
           onPressDelate={() =>
@@ -152,7 +152,7 @@ const RoutineExercisesScreen = () => {
           onPressBack={() =>
             router.push({
               pathname: "/ViewDay",
-              params: { routineID, routineName, shouldRefresh: "true" },
+              params: { routineID, routineName, shouldRefresh: "true" ,exercises},
             })
           }
           onPressDelate={() =>

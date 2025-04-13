@@ -77,6 +77,8 @@ const RoutineScreen = () => {
     return typeof image === 'number' ? image : { uri: image };
   };
 
+console.log(routines)
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MIS RUTINAS</Text>

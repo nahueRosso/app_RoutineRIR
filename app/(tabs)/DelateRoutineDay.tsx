@@ -29,7 +29,6 @@ interface Routine {
 const DeleteRoutineDayScreen = () => {
   const router = useRouter();
   const { routineID, routineName } = useLocalSearchParams();
-  console.log(routineName,routineID);
   
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -99,7 +98,9 @@ const DeleteRoutineDayScreen = () => {
   };
 
   const renderDayItem = ({ item }: { item: [string, Day] }) => {
+    
     const [dayId, day] = item;
+    console.log('dayId: ', dayId, 'routineID: ',typeof routineID);
     return (
       <ButtonCustom onPress={() => showDeleteDialog(routineID, dayId)} 
       textFirst={day.priorityExercises[1]?`${day.priorityExercises[0]?.slice(0,7)} - ${day.priorityExercises[1]?.slice(0,7)}`:`${day.priorityExercises[0]?.slice(0,7)}`}
@@ -118,14 +119,12 @@ const sortedDaysArray = currentRoutine?.days
       .map(([_, dayData]) => dayData)
   : [];
 
-console.log(sortedDaysArray); // Corregido el nombre de la variable
 const objVacio:any = {}
 for (let i = 0; i < sortedDaysArray.length; i++) {
   objVacio[sortedDaysArray[i].name] = sortedDaysArray[i];
   
 }
 
-console.log(objVacio);
 
 
   return (

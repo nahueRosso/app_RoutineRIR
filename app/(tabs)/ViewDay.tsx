@@ -68,6 +68,7 @@ const RoutineScreen = () => {
         dayName: day.name,
         routineID: routineID,
         routineName: routineName,
+        exercises:day.priorityExercises
       },
     });
   };
