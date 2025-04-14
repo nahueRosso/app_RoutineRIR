@@ -14,6 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { BackDelateButton, ButtonCustom } from "@/components/ui/Buttons";
+import { images_obj } from "@/constants/Exercise";
+import {Image} from "expo-image"
 
 interface Day {
   id: string;
@@ -38,8 +40,8 @@ const buildSetArray = (set: number, value: number): number[] => {
 
 const CreateDaysScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineID, routineName } = useLocalSearchParams();
-  const [exeName, setExeName] = useState("");
+  const { dayID, dayName, routineID, routineName,titleExe ,imgExe  } = useLocalSearchParams();
+  const [exeName, setExeName] = useState<any>("");
   const [set, setSet] = useState("");
   const [weight, setWeight] = useState("");
   const [repetition, setRepetition] = useState("");
@@ -47,6 +49,18 @@ const CreateDaysScreen = () => {
   const [routines, setRoutines] = useState<any>([]);
   const [days, setDays] = useState<any[]>([]);
   const [error, setError] = useState("");
+  
+console.log(titleExe,imgExe,images_obj);
+
+useEffect(() => {
+  if (titleExe) {
+    setExeName(titleExe);
+  }
+  if(titleExe==='s'){
+    setExeName('');
+  }
+
+}, [titleExe]);
 
   const fetchRoutines = useCallback(async () => {
     try {
@@ -235,6 +249,27 @@ const CreateDaysScreen = () => {
     parseFloat(weight) > 500 ||
     exeName.length > 40;
 
+
+  const getImageSource = (imageKey: keyof typeof images_obj) => {
+    const image = images_obj[imageKey];
+  
+    if (Platform.OS === "web") {
+      
+      if (typeof image === 'object' && image !== null && 'default' in image) {
+        return { uri: image.default };
+      }
+  
+      if (typeof image === 'string') {
+        return { uri: image };
+      }
+  
+      return undefined; 
+    }
+  
+    return typeof image === "number" ? image : { uri: image };
+  };
+
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -243,32 +278,40 @@ const CreateDaysScreen = () => {
       <Text style={styles.title}>CREAR EJERCICIOS</Text>
 
       <View style={styles.formContainer}>
-        <TouchableOpacity
+      <TouchableOpacity
+        style={{
+          // flex: 2,
+          backgroundColor: "#161618",
+          borderStyle: "dashed",
+          borderRadius: 25,
+          borderWidth: 3,
+          borderColor: "#28282A",
+          marginHorizontal: 20,
+          justifyContent: "center",
+          alignItems: "center",
+          width:300,
+          height:200
+          
+        }}
+      >
+        {imgExe!==''?<Image 
+          source={getImageSource(imgExe as keyof typeof images_obj)}
+          contentFit="cover"
           style={{
-            // flex: 2,
-            backgroundColor: "#161618",
-            borderStyle: "dashed",
-            borderRadius: 25,
-            borderWidth: 3,
-            borderColor: "#28282A",
-            marginHorizontal: 20,
-            justifyContent: "center",
-            alignItems: "center",
-            width:300,
-            height:200
-            
-          }}
-        >
-          <Icon name="add-a-photo" size={24} color="#aaaaaa" />
-          <Text
-            style={{
-              color: "#aaa",
-              marginTop: 10,
+              // position:'absolute',
+              top:-10,
+            //   backgroundColor:'red',
+              // marginHorizontal:5,
+              width: 200,
+              height: 200,marginHorizontal: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              
             }}
-          >
-            agregar imagen
-          </Text>
+        />:<><Icon name="add-a-photo" size={24} color="#aaaaaa" />
+        <Text style={{color: "#aaa",marginTop: 10,}}>agregar imagen</Text></>}
         </TouchableOpacity>
+        
 
         <TextInput
           placeholder="Nombre del ejercicio"

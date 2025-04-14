@@ -78,27 +78,23 @@ const RoutineScreen = () => {
       setSerchArr(toArray(exercises));
     }
   }, [exercises]);
-  
-  // console.log('exercises: ',exercises,'selectedExercises: ',selectedExercises,'serchArr: :',serchArr);
+ 
   const getImageSource = (imageKey: keyof typeof images_obj) => {
     const image = images_obj[imageKey];
   
     if (Platform.OS === "web") {
-      // Si image es un objeto con una propiedad `default`, devolvémosla
+      
       if (typeof image === 'object' && image !== null && 'default' in image) {
         return { uri: image.default };
       }
   
-      // Si image es un string (una URL o ruta), devolverlo directo
       if (typeof image === 'string') {
         return { uri: image };
       }
   
-      // console.warn(`Formato de imagen no soportado en web:`, image);
-      return undefined; // o una imagen fallback
+      return undefined; 
     }
   
-    // Mobile puede usar require()
     return typeof image === "number" ? image : { uri: image };
   };
   
@@ -121,21 +117,32 @@ const RoutineScreen = () => {
     );
   };
 
-const backButton = () =>{
-   
-  router.push({
-      pathname: "/ChooseCreateCreated",
-      params: {
-        dayID,
-        dayName,
-        routineID,
-        routineName,
-        shouldRefresh: "true",
-        exercises
-      },
-    })
+  const backButton = () =>{
+     
+    router.push({
+        pathname: "/ChooseCreateCreated",
+        params: {
+          dayID,
+          dayName,
+          routineID,
+          routineName,
+          shouldRefresh: "true",
+          exercises
+        },
+      })
+    
+  }
+
+  const goCreateExeButton = (exe:any) =>{
+     
+    router.push({
+        pathname: "/CreateExercises",
+        params: {dayID, dayName, routineID, routineName,titleExe:exe.es.title,imgExe:exe.imgPath },
+      })
+    
+  }
   
-}
+   
 
  console.log('asdsasadds: ',serchArr);
  
@@ -189,7 +196,7 @@ const backButton = () =>{
                   <CartExe
                     key={index}
                     id={exe.id}
-                    onPress={() => console.log(exe.nameExe)}
+                    onPress={() => goCreateExeButton(exe)}
                     source={getImageSource(
                       exe.imgPath as keyof typeof images_obj
                     )}
@@ -203,7 +210,7 @@ const backButton = () =>{
                   <CartExe
                     key={index}
                     id={exe.id}
-                    onPress={() => console.log(exe.nameExe)}
+                    onPress={() => goCreateExeButton(exe)}
                     source={getImageSource(
                       exe.imgPath as keyof typeof images_obj
                     )}
