@@ -85,7 +85,9 @@ export const BackDelateButton = ({
           onPress={onPressButtonInfo}
           style={{
             backgroundColor: "#262628",
-            // backgroundColor: "#BCFD0E",
+            borderStyle: "solid",
+            borderWidth: .5,
+            borderColor: "#BCFD0E",
             width: 120,
             height: 50,
             borderRadius: 30,

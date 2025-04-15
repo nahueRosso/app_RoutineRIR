@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback,useRef } from "react";
 import { 
   View, 
   Text, 
@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
-  Platform  
+  Platform ,
+  ScrollView as ScrView 
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +20,9 @@ import { BackDelateButton } from "@/components/ui/Buttons";
 import {Image} from "expo-image"
 import { images_obj } from "@/constants/Exercise";
 import dataExecises from "../../dataExecises.json";
+import { Animated, Easing } from 'react-native';
+import { ScrollView } from "react-native-gesture-handler";
+
 
 
 
@@ -69,6 +73,8 @@ const RoutineOneExerciseScreen = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  const slideAnim = useRef(new Animated.Value(1000)).current; // valor alto, fuera de pantalla
+
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -100,7 +106,24 @@ const RoutineOneExerciseScreen = () => {
   };
 
   const handleToggleInfo = () => {
-    setShowInfo(prev => !prev);
+    if (!showInfo) {
+      setShowInfo(true); // mostramos el componente
+      Animated.timing(slideAnim, {
+        toValue: 0, // lo traemos arriba
+        duration: 300,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: 1000, // lo mandamos abajo
+        duration: 300,
+        easing: Easing.in(Easing.exp),
+        useNativeDriver: true,
+      }).start(() => {
+        setShowInfo(false); // ocultamos después de la animación
+      });
+    }
   };
 
   function findExerciseById(dataExercises:any, exerciseId:any) {
@@ -281,7 +304,7 @@ useEffect(() => {
     <KeyboardAvoidingView
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
   style={[styles.container, {flex: 1}]} 
-  keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} 
+  keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -200} 
 >
       {/* <Text style={styles.title}>{main.name.toUpperCase()}</Text> */}
       <Text style={styles.title}>{' '}</Text>
@@ -392,40 +415,46 @@ useEffect(() => {
 
       </View>
 
-      {showInfo && (
-  <View
+      {(exeObjet !== null) && showInfo && (
+  <Animated.View
     style={{
-      flex: 1,
-      backgroundColor: "red",
+      transform: [{ translateY: slideAnim }],
+      backgroundColor: "#262628",
       padding: 20,
       width: '110%',
-      height: '50%',
-      top: 380,
-      left: 0,
+      height: '62%',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
       position: 'absolute',
-      // zIndex: 1000,
+      bottom: 0, // para que se deslice desde abajo
     }}
   >
-    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' }}>
+    <ScrView style={{ flex: 1 }} 
+  contentContainerStyle={{ paddingBottom: 100 }}
+  showsVerticalScrollIndicator={false}>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' ,fontWeight:'bold',marginBottom:-10}}>
       Músculos en trabajo
     </Text>
-    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' ,lineHeight:22}}>
       {exeObjet?.es?.lead}
     </Text>
-    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' }}>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' ,fontWeight:'bold',marginBottom:-10,marginTop:25}}>
       Paso a Paso
     </Text>
-    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
-      {exeObjet?.es?.firstPosition[0]}
-    </Text>
-    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
-      {exeObjet?.es?.firstPosition[1]}
-    </Text>
-  </View>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify',lineHeight:22 }}>
+    {exeObjet?.es?.firstPosition[0]}
+  {"\n"}
+  {exeObjet?.es?.firstPosition[1]}
+       </Text>
+    {/* <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
+      {exeObjet?.es?.firstPosition[1]} </Text> */}
+    </ScrView>
+  </Animated.View>
 )}
 
+
       
-     <BackDelateButton onPressBack={handleGoBack} styleContainer={isKeyboardVisible?{display:'none'}:{display:'flex'}} buttonInfo={true} onPressButtonInfo={handleToggleInfo} buttonInfoUpDownArrow={showInfo}/>
+     <BackDelateButton onPressBack={handleGoBack} styleContainer={isKeyboardVisible?{display:'none',backgroundColor: "transparent"}:{display:'flex',backgroundColor: "transparent"}} buttonInfo={true} onPressButtonInfo={handleToggleInfo} buttonInfoUpDownArrow={showInfo}/>
     </KeyboardAvoidingView>
   );
 };
