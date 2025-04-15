@@ -137,7 +137,7 @@ const RoutineScreen = () => {
      
     router.push({
         pathname: "/CreateExercises",
-        params: {dayID, dayName, routineID, routineName,titleExe:exe.es.title,imgExe:exe.imgPath },
+        params: {dayID, dayName, routineID, routineName,titleExe:exe.es.title,imgExe:exe.imgPath,idExeList:exe.id },
       })
     
   }

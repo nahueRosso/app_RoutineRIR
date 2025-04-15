@@ -22,7 +22,7 @@ const { dayID, dayName, routineID, routineName,exercises  } =
     const goAddExe = () => {
         router.push({
           pathname: "/CreateExercises",
-          params: { dayID, dayName, routineID, routineName, titleExe:'s',imgExe:''},
+          params: { dayID, dayName, routineID, routineName, titleExe:'s',imgExe:'',idExeList:''},
         });
       };
 

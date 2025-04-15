@@ -29,6 +29,7 @@ interface Exercise {
   weight: number;
   repetition: number;
   rir: number;
+  idExeList:string;
   arrSetWeight: number[];
   arrSetRepetition: number[];
   arrSetRIR: number[];
@@ -40,7 +41,7 @@ const buildSetArray = (set: number, value: number): number[] => {
 
 const CreateDaysScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineID, routineName,titleExe ,imgExe  } = useLocalSearchParams();
+  const { dayID, dayName, routineID, routineName,titleExe ,imgExe ,idExeList } = useLocalSearchParams();
   const [exeName, setExeName] = useState<any>("");
   const [set, setSet] = useState("");
   const [weight, setWeight] = useState("");
@@ -208,6 +209,7 @@ useEffect(() => {
         weight: parseFloat(weight),
         repetition: parseFloat(repetition),
         rir: parseInt(rir),
+        idExeList: idExeList,
         arrSetWeight: buildSetArray(parseInt(set), parseFloat(weight)),
         arrSetRepetition: buildSetArray(parseInt(set), parseFloat(repetition)),
         arrSetRIR: buildSetArray(parseInt(set), parseFloat(rir)),

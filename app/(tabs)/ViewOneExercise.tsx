@@ -16,6 +16,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useRouter,useFocusEffect,useLocalSearchParams } from 'expo-router'
 import { BackDelateButton } from "@/components/ui/Buttons";
+import {Image} from "expo-image"
+import { images_obj } from "@/constants/Exercise";
+import dataExecises from "../../dataExecises.json";
+
+
 
 interface CreateDaysScreenProps {
   navigation: NavigationProp<any>;
@@ -25,6 +30,7 @@ interface CreateDaysScreenProps {
 interface Exercise {
   id: string;
   name: string;
+  idExeList: string;
   arrSetWeight: number[];
   arrSetRepetition:number[];
   arrSetRIR: number[];
@@ -46,7 +52,6 @@ interface Routine {
 }
 interface ApiData {
   exercises: Exercise[] ;
-  // Agrega otras propiedades que pueda tener tu objeto api
 }
 
 
@@ -54,20 +59,61 @@ const RoutineOneExerciseScreen = () => {
   const router = useRouter();
   const { routineID, routineName,execerID ,execerName, dayID, execerNameFirst } = useLocalSearchParams();
   const [dayName,setDayName] = useState<string>('')
-  // console.log('routineID: ',routineID, 'routineName: ',routineName,);
   const [api, setApi] = useState<ApiData | any>();
-  // const [api, setApi] = useState<{exercises: Exercise[]}>({ exercises: [] });
   const [main, setMain] = useState<Exercise | undefined>();
   const [weights, setWeights] = useState<any>(main?.arrSetWeight || []);
   const [repetitions, setRepetitions] = useState<any>(main?.arrSetRepetition || []);
   const [rirs, setRirs] = useState<any>(main?.arrSetRIR || []);
-  const [index, setIndex] = useState<any>(
-    // api.exercises.findIndex((e: any) => e.id === routineID)
-  );
+  const [idExeList,setIdExeList] = useState(main?.idExeList || [])
+  const [exeObjet,setExeObjet] = useState<any>()
+  const [showInfo, setShowInfo] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    if (idExeList) {
+      const exercise = findExerciseById(dataExecises, idExeList);
+      setExeObjet(exercise);
+    }
+  }, [idExeList]);
+
+
+  const getImageSource = (imageKey: keyof typeof images_obj) => {
+    const image = images_obj[imageKey];
+  
+    if (Platform.OS === "web") {
+      
+      if (typeof image === 'object' && image !== null && 'default' in image) {
+        return { uri: image.default };
+      }
+  
+      if (typeof image === 'string') {
+        return { uri: image };
+      }
+  
+      return undefined; 
+    }
+  
+    return typeof image === "number" ? image : { uri: image };
+  };
+
+  const handleToggleInfo = () => {
+    setShowInfo(prev => !prev);
+  };
+
+  function findExerciseById(dataExercises:any, exerciseId:any) {
+    let result:any = null;
+    dataExercises.forEach((category:any) => {
+      if (category.exercises && !result) {
+        const exercise = category.exercises.find((ex:any) => ex.id === exerciseId);
+        if (exercise) result = exercise;
+      }
+    });
+    return result;
+  }
+
 
 useEffect(() => {
   const keyboardDidShowListener = Keyboard.addListener(
@@ -113,6 +159,7 @@ useEffect(() => {
             setWeights(currentExercise.arrSetWeight || []);
             setRepetitions(currentExercise.arrSetRepetition || []);
             setRirs(currentExercise.arrSetRIR || []);
+            setIdExeList(currentExercise.idExeList || []);
           }
         } catch (error) {
           console.error("Error loading data", error);
@@ -123,8 +170,6 @@ useEffect(() => {
     }, [execerNameFirst, dayID, execerID]) // ✅ Dependencias correctas
   );
 
-
-  // Guardar cambios en AsyncStorage
   const saveChanges = async () => {
     if (!main) return;
   
@@ -198,6 +243,7 @@ useEffect(() => {
     setWeights(newExercise.arrSetWeight || []);
     setRepetitions(newExercise.arrSetRepetition || []);
     setRirs(newExercise.arrSetRIR || []);
+    setIdExeList(newExercise.idExeList || []);
   };
 
   const handleGoBack = async () => {
@@ -222,6 +268,15 @@ useEffect(() => {
     return <ActivityIndicator size="large" color="#6200ee" />;
   }
 
+  
+  
+  // useEffect(() => {
+  //   if (idExeList) {
+  //     const exercise = findExerciseById(dataExecises, idExeList);
+  //     setExeObjet(exercise);
+  //   }
+  // }, [idExeList]); // Solo se ejecuta cuando idExeList cambia
+  console.log('showInfo: ',showInfo);
   return (
     <KeyboardAvoidingView
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -253,14 +308,32 @@ useEffect(() => {
             <Icon name="chevron-left" size={24} color="#A1D70F" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={api.exercises.length === 1 
-                ? {...styles.imagePlaceholder, ...{marginHorizontal:'18%'}} 
-                : {...styles.imagePlaceholder}
-            }>
-            <Icon name="add-a-photo" size={24} color="#aaaaaa" />
-            <Text style={styles.imagePlaceholderText}>agregar imagen</Text>
-            {/* <Text style={styles.imagePlaceholderText}>add image</Text> */}
-          </TouchableOpacity>
+          <TouchableOpacity
+  style={[
+    styles.imagePlaceholder,
+    api.exercises.length === 1 && { marginHorizontal: '18%' }
+  ]}
+>
+  {exeObjet !== null ? (
+    <Image
+      source={getImageSource(exeObjet?.imgPath as keyof typeof images_obj)}
+      contentFit="cover"
+      style={{
+        width: 200,
+        height: 200,
+        top: -10,
+        marginHorizontal: 20,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    />
+  ) : (
+    <>
+      <Icon name="add-a-photo" size={24} color="#aaaaaa" />
+      <Text style={{ color: "#aaa", marginTop: 10 }}>agregar imagen</Text>
+    </>
+  )}
+</TouchableOpacity>
 
           <TouchableOpacity 
             onPress={() => handleExerciseChange('prev')}
@@ -318,8 +391,41 @@ useEffect(() => {
         </View>
 
       </View>
+
+      {showInfo && (
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: "red",
+      padding: 20,
+      width: '110%',
+      height: '50%',
+      top: 380,
+      left: 0,
+      position: 'absolute',
+      // zIndex: 1000,
+    }}
+  >
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' }}>
+      Músculos en trabajo
+    </Text>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
+      {exeObjet?.es?.lead}
+    </Text>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify', textTransform: 'uppercase' }}>
+      Paso a Paso
+    </Text>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
+      {exeObjet?.es?.firstPosition[0]}
+    </Text>
+    <Text style={{ ...styles.sectionTitle, fontSize: 15, textAlign: 'justify' }}>
+      {exeObjet?.es?.firstPosition[1]}
+    </Text>
+  </View>
+)}
+
       
-     <BackDelateButton onPressBack={handleGoBack} styleContainer={isKeyboardVisible?{display:'none'}:{display:'flex'}}/>
+     <BackDelateButton onPressBack={handleGoBack} styleContainer={isKeyboardVisible?{display:'none'}:{display:'flex'}} buttonInfo={true} onPressButtonInfo={handleToggleInfo} buttonInfoUpDownArrow={showInfo}/>
     </KeyboardAvoidingView>
   );
 };

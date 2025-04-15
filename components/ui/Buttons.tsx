@@ -10,6 +10,9 @@ export const BackDelateButton = ({
   addSmall = false,
   delate = false,
   styleContainer = Object,
+  buttonInfo = false,
+  onPressButtonInfo=undefined,
+  buttonInfoUpDownArrow=false,
 }: any) => {
   return (
     <View
@@ -73,6 +76,42 @@ export const BackDelateButton = ({
           }}
         >
           <Icon name="delete" size={25} color="#161618" />
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
+      {buttonInfo ? (
+        <TouchableOpacity
+          onPress={onPressButtonInfo}
+          style={{
+            backgroundColor: "#262628",
+            // backgroundColor: "#BCFD0E",
+            width: 120,
+            height: 50,
+            borderRadius: 30,
+            flexDirection:'row',
+            justifyContent: "flex-start",
+            alignItems: "center",
+            zIndex:1000
+          }}
+        >
+          <Text style={{width:75,color:"#fff",fontSize:16,fontFamily:'Cochin',textAlign:'center',textTransform:"uppercase"}}>Info</Text>
+          <View style={{
+            backgroundColor: "#BCFD0E",
+            width: 50,
+            height: 50,
+            borderRadius: 30,
+            position:'absolute',
+            right:0,
+            top:0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+            {buttonInfoUpDownArrow?
+            <Icon name="arrow-downward" size={25} color="#161618" />:
+            <Icon name="arrow-upward" size={25} color="#161618" />}
+          
+          </View>
         </TouchableOpacity>
       ) : (
         <></>
