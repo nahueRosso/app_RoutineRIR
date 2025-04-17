@@ -16,8 +16,7 @@ import {
   ButtonCustom,
   ButtonExample
 } from "@/components/ui/Buttons";
-import db from '../../db.json'
-import { Image } from 'expo-image';
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 
 // import {images_obj} from "@/components/Exercise";
@@ -50,8 +49,6 @@ const RoutineScreen = () => {
     }, [fetchRoutines])
   );
 
-
-
   const renderRoutineItem = ({ item }: { item: Routine }) => (
     <ButtonCustom
       onPress={() =>
@@ -61,6 +58,9 @@ const RoutineScreen = () => {
         })
       }
       textFirst={item.name}
+      textSecond={<Icon name="fitness-center" size={25} style={{right:-17,
+              top:12,
+      zIndex: 2,transform: [{ rotate: "90deg" }]}} color="#262628" />}
     />
   );
 

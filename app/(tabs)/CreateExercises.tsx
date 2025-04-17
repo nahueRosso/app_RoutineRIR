@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,15 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Platform,
+  ScrollView as ScrView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { BackDelateButton, ButtonCustom } from "@/components/ui/Buttons";
 import { images_obj } from "@/constants/Exercise";
-import {Image} from "expo-image"
+import { Image } from "expo-image";
+import { Animated, Easing } from "react-native";
 
 interface Day {
   id: string;
@@ -29,7 +31,7 @@ interface Exercise {
   weight: number;
   repetition: number;
   rir: number;
-  idExeList:string;
+  idExeList: string;
   arrSetWeight: number[];
   arrSetRepetition: number[];
   arrSetRIR: number[];
@@ -41,7 +43,15 @@ const buildSetArray = (set: number, value: number): number[] => {
 
 const CreateDaysScreen = () => {
   const router = useRouter();
-  const { dayID, dayName, routineID, routineName,titleExe ,imgExe ,idExeList } = useLocalSearchParams();
+  const {
+    dayID,
+    dayName,
+    routineID,
+    routineName,
+    titleExe,
+    imgExe,
+    idExeList,
+  } = useLocalSearchParams();
   const [exeName, setExeName] = useState<any>("");
   const [set, setSet] = useState("");
   const [weight, setWeight] = useState("");
@@ -50,18 +60,22 @@ const CreateDaysScreen = () => {
   const [routines, setRoutines] = useState<any>([]);
   const [days, setDays] = useState<any[]>([]);
   const [error, setError] = useState("");
-  
-console.log(titleExe,imgExe,images_obj);
+  const [lead, setLead] = useState("");
+  const [firstPosition, setFirstPosition] = useState("");
+  const slideAnim = useRef(new Animated.Value(1000)).current;
 
-useEffect(() => {
-  if (titleExe) {
-    setExeName(titleExe);
-  }
-  if(titleExe==='s'){
-    setExeName('');
-  }
+  const [showInfo, setShowInfo] = useState(false);
 
-}, [titleExe]);
+  console.log(titleExe, imgExe, images_obj);
+
+  useEffect(() => {
+    if (titleExe) {
+      setExeName(titleExe);
+    }
+    if (titleExe === "s") {
+      setExeName("");
+    }
+  }, [titleExe]);
 
   const fetchRoutines = useCallback(async () => {
     try {
@@ -153,6 +167,35 @@ useEffect(() => {
     setRepetition(text);
   };
 
+  const validateLead = (text: string) => {
+    setLead(text); // podrías agregar validación si necesitás
+  };
+
+  const validateFirstPosition = (text: string) => {
+    setFirstPosition(text); // podrías agregar validación si necesitás
+  };
+
+  const handleToggleInfo = () => {
+    if (!showInfo) {
+      setShowInfo(true); // mostramos el componente
+      Animated.timing(slideAnim, {
+        toValue: 0, // lo traemos arriba
+        duration: 300,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: 1000, // lo mandamos abajo
+        duration: 300,
+        easing: Easing.in(Easing.exp),
+        useNativeDriver: true,
+      }).start(() => {
+        setShowInfo(false); // ocultamos después de la animación
+      });
+    }
+  };
+
   const saveExercise = async () => {
     try {
       if (
@@ -213,6 +256,8 @@ useEffect(() => {
         arrSetWeight: buildSetArray(parseInt(set), parseFloat(weight)),
         arrSetRepetition: buildSetArray(parseInt(set), parseFloat(repetition)),
         arrSetRIR: buildSetArray(parseInt(set), parseFloat(rir)),
+        lead: lead,
+        firstPosition: firstPosition,
       };
 
       currentDay.exercises.push(newExercise);
@@ -225,6 +270,8 @@ useEffect(() => {
       setWeight("");
       setRepetition("");
       setRir("2");
+      setLead("");
+      setFirstPosition("");
 
       router.push({
         pathname: "/ViewExercises",
@@ -251,26 +298,23 @@ useEffect(() => {
     parseFloat(weight) > 500 ||
     exeName.length > 40;
 
-
   const getImageSource = (imageKey: keyof typeof images_obj) => {
     const image = images_obj[imageKey];
-  
+
     if (Platform.OS === "web") {
-      
-      if (typeof image === 'object' && image !== null && 'default' in image) {
+      if (typeof image === "object" && image !== null && "default" in image) {
         return { uri: image.default };
       }
-  
-      if (typeof image === 'string') {
+
+      if (typeof image === "string") {
         return { uri: image };
       }
-  
-      return undefined; 
+
+      return undefined;
     }
-  
+
     return typeof image === "number" ? image : { uri: image };
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -280,40 +324,46 @@ useEffect(() => {
       <Text style={styles.title}>CREAR EJERCICIOS</Text>
 
       <View style={styles.formContainer}>
-      <TouchableOpacity
-        style={{
-          // flex: 2,
-          backgroundColor: "#161618",
-          borderStyle: "dashed",
-          borderRadius: 25,
-          borderWidth: 3,
-          borderColor: "#28282A",
-          marginHorizontal: 20,
-          justifyContent: "center",
-          alignItems: "center",
-          width:300,
-          height:200
-          
-        }}
-      >
-        {imgExe!==''?<Image 
-          source={getImageSource(imgExe as keyof typeof images_obj)}
-          contentFit="cover"
+        <TouchableOpacity
           style={{
-              // position:'absolute',
-              top:-10,
-            //   backgroundColor:'red',
-              // marginHorizontal:5,
-              width: 200,
-              height: 200,marginHorizontal: 20,
-              justifyContent: "center",
-              alignItems: "center",
-              
-            }}
-        />:<><Icon name="add-a-photo" size={24} color="#aaaaaa" />
-        <Text style={{color: "#aaa",marginTop: 10,}}>agregar imagen</Text></>}
+            // flex: 2,
+            backgroundColor: "#161618",
+            borderStyle: "dashed",
+            borderRadius: 25,
+            borderWidth: 3,
+            borderColor: "#28282A",
+            marginHorizontal: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            width: 300,
+            height: 200,
+          }}
+        >
+          {imgExe !== "" ? (
+            <Image
+              source={getImageSource(imgExe as keyof typeof images_obj)}
+              contentFit="cover"
+              style={{
+                // position:'absolute',
+                top: -10,
+                //   backgroundColor:'red',
+                // marginHorizontal:5,
+                width: 200,
+                height: 200,
+                marginHorizontal: 20,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            />
+          ) : (
+            <>
+              <Icon name="add-a-photo" size={24} color="#aaaaaa" />
+              <Text style={{ color: "#aaa", marginTop: 10 }}>
+                agregar imagen
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
-        
 
         <TextInput
           placeholder="Nombre del ejercicio"
@@ -364,9 +414,9 @@ useEffect(() => {
               style={{ ...styles.input, ...styles.inputSmall }}
             />
           </View>
-         
+
           <View>
-            <Text style={styles.inputText}>RIR</Text>
+            <Text style={{...styles.inputText,textTransform: "uppercase",}}>RIR</Text>
             <TextInput
               placeholder="1-5"
               placeholderTextColor="#888"
@@ -377,7 +427,63 @@ useEffect(() => {
             />
           </View>
         </View>
+
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+        {showInfo && (
+          <Animated.View
+            style={{
+              transform: [{ translateY: slideAnim }],
+              backgroundColor: "#262628",
+              padding: 20,
+              width: "100%",
+              height: "130%",
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              position: "absolute",
+              bottom: -400,
+              zIndex: 1,
+            }}
+          >
+            <ScrView
+              style={{ flex: 1}}
+              contentContainerStyle={{ paddingBottom: 100 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {/* <View
+                style={{
+                  flexDirection: "column",
+                  alignItems:'center',
+                  justifyContent: "center",
+                  width: "70%",
+                  marginTop: 10,
+                }}
+              > */}
+                <View>
+                  <Text style={styles.inputText}>muscúlos en trabajo</Text>
+                  <TextInput
+                    placeholder="muscúlos"
+                    placeholderTextColor="#888"
+                    value={lead}
+                    onChangeText={validateLead}
+                    style={{ ...styles.input, ...styles.inputSmall }}
+                  />
+                </View>
+
+                <View>
+                  <Text style={styles.inputText}>paso a paso</Text>
+                  <TextInput
+                    placeholder="instrucciónes"
+                    placeholderTextColor="#888"
+                    value={firstPosition}
+                    onChangeText={validateFirstPosition}
+                    style={{ ...styles.input, ...styles.inputSmall }}
+                  />
+                </View>
+              {/* </View> */}
+            </ScrView>
+          </Animated.View>
+        )}
 
         <ButtonCustom
           onPress={saveExercise}
@@ -408,6 +514,9 @@ useEffect(() => {
         styleContainer={
           isKeyboardVisible ? { display: "none" } : { display: "flex" }
         }
+        buttonInfo={true}
+        onPressButtonInfo={handleToggleInfo}
+        buttonInfoUpDownArrow={showInfo}
       />
     </KeyboardAvoidingView>
   );
@@ -440,24 +549,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#28282A",
     color: "white",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 3,
     marginBottom: 16,
     fontFamily: "Cochin",
   },
   inputName: {
-    marginTop:10,
+    marginTop: 10,
     width: "70%",
-
   },
   inputSmall: {
-    width: 60,
+    // width: 60,
     // paddingHorizontal:'10%'
   },
   inputText: {
     color: "#fff",
     textAlign: "center",
     marginBottom: 10,
-    textTransform:'capitalize',
+    textTransform: "capitalize",
+    
   },
   errorText: {
     color: "#C70000",
@@ -474,6 +583,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     position: "relative",
     padding: 15,
+    zIndex: 0,
   },
   disabledButton: {
     opacity: 0.6,
