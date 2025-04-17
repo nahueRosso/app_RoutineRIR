@@ -88,10 +88,9 @@ const RoutineOneExerciseScreen = () => {
     if (idExeList) {
       const exercise = findExerciseById(dataExecises, idExeList);
       setExeObjet(exercise);
-      console.log(main?.lead);
-      
     }
   }, [idExeList, rirs]);
+  
 
   const getImageSource = (imageKey: keyof typeof images_obj) => {
     const image = images_obj[imageKey];
@@ -251,6 +250,7 @@ const RoutineOneExerciseScreen = () => {
     }
   };
 
+
   const handleWeightChange = (index: number, value: string) => {
     const newWeights = [...weights];
     newWeights[index] = parseFloat(value) || 0;
@@ -304,24 +304,28 @@ const RoutineOneExerciseScreen = () => {
 
   const handleExerciseChange = async (direction: "next" | "prev") => {
     if (!api?.exercises) return;
-
     await saveChanges();
-
+  
     const currentIndex = api.exercises.findIndex((e: any) => e.id === main?.id);
     if (currentIndex === -1) return;
-
+  
     const newIndex =
       direction === "next"
         ? (currentIndex + 1) % api.exercises.length
         : (currentIndex - 1 + api.exercises.length) % api.exercises.length;
-
+  
     const newExercise = api.exercises[newIndex];
-
+  
+    // Actualizar todo el estado de una vez
     setMain(newExercise);
     setWeights(newExercise.arrSetWeight || []);
     setRepetitions(newExercise.arrSetRepetition || []);
     setRirs(newExercise.arrSetRIR || []);
     setIdExeList(newExercise.idExeList || []);
+    
+    // Buscar y actualizar exeObjet inmediatamente
+    const newExeObjet = findExerciseById(dataExecises, newExercise.idExeList);
+    setExeObjet(newExeObjet || null);
   };
 
   const handleGoBack = async () => {
@@ -346,8 +350,10 @@ const RoutineOneExerciseScreen = () => {
   if (!main) {
     return <ActivityIndicator size="large" color="#6200ee" />;
   }
+  
+  (exeObjet?.es?.lead || main?.lead) ? '' : handleToggleInfo();
 
-  (exeObjet?.es?.lead || main?.lead) ? console.log("ada") : handleToggleInfo();
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -375,7 +381,7 @@ const RoutineOneExerciseScreen = () => {
 
         <View style={styles.navigationContainer}>
           <TouchableOpacity
-            onPress={() => handleExerciseChange("next")}
+            onPress={() => handleExerciseChange("prev")}
             style={
               api.exercises.length === 1
                 ? { ...styles.navButton, display: "none" }
@@ -419,7 +425,7 @@ const RoutineOneExerciseScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleExerciseChange("prev")}
+            onPress={() => handleExerciseChange("next")}
             style={
               api.exercises.length === 1
                 ? { ...styles.navButton, display: "none" }

@@ -3,7 +3,7 @@ import { View, Dimensions, StyleSheet, Text, ImageBackground, TouchableOpacity }
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import {useRouter} from 'expo-router'
 
-const imageBk = require("../../assets/images/fotoPortada_full.jpg");
+const imageBk = require("../../assets/images/fotoPortada_full.png");
 
 export default function HomeScreen() {
   

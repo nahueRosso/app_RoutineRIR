@@ -466,7 +466,7 @@ const CreateDaysScreen = () => {
                     placeholderTextColor="#888"
                     value={lead}
                     onChangeText={validateLead}
-                    style={{ ...styles.input, ...styles.inputSmall }}
+                    style={{ ...styles.input, ...styles.inputSmall,...styles.inputAnimated }}
                   />
                 </View>
 
@@ -477,7 +477,7 @@ const CreateDaysScreen = () => {
                     placeholderTextColor="#888"
                     value={firstPosition}
                     onChangeText={validateFirstPosition}
-                    style={{ ...styles.input, ...styles.inputSmall }}
+                    style={{ ...styles.input, ...styles.inputSmall ,...styles.inputAnimated}}
                   />
                 </View>
               {/* </View> */}
@@ -548,14 +548,22 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#28282A",
     color: "white",
-    padding: 15,
+    // padding: 10,
+    paddingHorizontal: 15,
+    width:60,
+    height:40,
     borderRadius: 3,
     marginBottom: 16,
+    
     fontFamily: "Cochin",
   },
   inputName: {
     marginTop: 10,
     width: "70%",
+  },
+  inputAnimated:{
+    width:'100%',
+    backgroundColor:'#161618'
   },
   inputSmall: {
     // width: 60,

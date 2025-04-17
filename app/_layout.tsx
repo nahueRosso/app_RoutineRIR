@@ -8,6 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import db from "../db.json"; // asegurate de que el path esté correcto
+import dataExecises from "../dataExecises.json"; // asegurate de que el path esté correcto
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,6 +18,8 @@ export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
     'Satisfy-Regular': require('../assets/fonts/Satisfy-Regular.ttf'),
   });
+
+  dataExecises
 
   useEffect(() => {
     if (error) throw error;
@@ -31,7 +34,6 @@ export default function RootLayout() {
         if (isFirstLaunch === null) {
           if (db && db.length > 0) {
             await AsyncStorage.setItem("routines", JSON.stringify(db));
-            console.log("✅ RUTINAS DE EJEMPLO GUARDADAS");
           }
           await AsyncStorage.setItem("isFirstLaunch", "false");
         }

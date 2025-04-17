@@ -79,110 +79,72 @@ const RoutineExercisesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{...styles.title,textTransform:'uppercase'}}>{dayName}</Text>
-      <View style={{ display: "flex",marginBottom: 80, }}>
-        {routines.exercises.length > 0 ? (
-          <FlatList
-            data={routines.exercises}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <ButtonCustom
-                onPress={() =>
-                  router.push({
-                    pathname: "/ViewOneExercise",
-                    params: {
-                      routineID: routineID,
-                      routineName: routineName,
-                      execerID: item.id,
-                      execerName: item.name,
-                      dayID,
-                      execerNameFirst: routineName,
-                    },
-                  })
-                }
-                textFirst={item.name}
-              />
-            )}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            ListFooterComponent={
-              routines.exercises.length < 5 ? (
-              <AddButtonBig
-                onPress={goAddExe}
-                text={"agregar ejercicio"}
-                // text={"add new exercises"}
-                styleContainer={{ marginTop: 20 }}
-              />
-              ) : null
-            }
-          />
-        ) : (
-          <>
-          <ButtonExample textFirst="ejercicio de muestra" />
-          <AddButtonBig
-        onPress={goAddExe}
-        text={"agregar ejercicio"}
-        // text={"add new exercises"} 
-        styleContainer={{ marginTop: 0 }}
+  <Text style={{ ...styles.title, textTransform: "uppercase" }}>
+    {dayName}
+  </Text>
+
+  <FlatList
+    data={routines.exercises}
+    keyExtractor={(item, index) => index.toString()}
+    renderItem={({ item }) => (
+      <ButtonCustom
+        onPress={() =>
+          router.push({
+            pathname: "/ViewOneExercise",
+            params: {
+              routineID: routineID,
+              routineName: routineName,
+              execerID: item.id,
+              execerName: item.name,
+              dayID,
+              execerNameFirst: routineName,
+            },
+          })
+        }
+        textFirst={item.name}
       />
+    )}
+    contentContainerStyle={{ paddingBottom: 100 }}
+    ListEmptyComponent={() => (
+      <>
+        <ButtonExample textFirst="ejercicio de muestra" />
+        <AddButtonBig
+          onPress={goAddExe}
+          text={"agregar ejercicio"}
+          styleContainer={{ marginTop: 0 }}
+        />
       </>
-        )}
-      </View>
-
-
-      {routines.exercises.length < 7 && routines.exercises.length > 4 ? (
-        <BackDelateButton
-          onPressBack={() =>
-            router.push({
-              pathname: "/ViewDay",
-              params: { routineID, routineName, shouldRefresh: "true",exercises },
-            })
-          }
-          onPressDelate={() =>
-            router.push({
-              pathname: "/DelateRoutineExercises",
-              params: { dayID, dayName, routineID, routineName },
-            })
-          }
-          delate={routines.exercises.length===0?false:true}
-          onPressAdd={goAddExe}
-          addSmall={true}
+    )}
+    ListFooterComponent={() =>
+      (routines.exercises.length > 0 && routines.exercises.length < 5 ) ? (
+        <AddButtonBig
+          onPress={goAddExe}
+          text={"agregar ejercicio"}
+          styleContainer={{ marginTop: 20 }}
         />
-      ) : (
-        <BackDelateButton
-          onPressBack={() =>
-            router.push({
-              pathname: "/ViewDay",
-              params: { routineID, routineName, shouldRefresh: "true" ,exercises},
-            })
-          }
-          onPressDelate={() =>
-            router.push({
-              pathname: "/DelateRoutineExercises",
-              params: { dayID, dayName, routineID, routineName },
-            })
-          }
-          delate={routines.exercises.length===0?false:true}
-        />
-      )}
+      ) : null
+    }
+  />
 
-      {/* <BackDelateButton
-        onPressBack={() =>
-          router.push({
-            pathname: "/ViewDay",
-            params: { routineID, routineName,shouldRefresh:'true' },
-          })
-        }
-        onPressDelate={() =>
-          router.push({
-            pathname: "/DelateRoutineExercises",
-            params: { dayID, dayName, routineID, routineName },
-          })
-        }
-        delate={true}
-      /> */}
+  <BackDelateButton
+    onPressBack={() =>
+      router.push({
+        pathname: "/ViewDay",
+        params: { routineID, routineName, shouldRefresh: "true", exercises },
+      })
+    }
+    onPressDelate={() =>
+      router.push({
+        pathname: "/DelateRoutineExercises",
+        params: { dayID, dayName, routineID, routineName },
+      })
+    }
+    delate={routines.exercises.length > 0}
+    addSmall={routines.exercises.length < 14 && routines.exercises.length > 4}
+    onPressAdd={goAddExe}
+  />
+</View>
 
-      {/* </View> */}
-    </View>
   );
 };
 

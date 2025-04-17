@@ -69,7 +69,6 @@ const DeleteRoutineScreen = () => {
 zIndex: 2,}} color="#262628" />} />
   );
 
-console.log(routines);
 
 
   return (

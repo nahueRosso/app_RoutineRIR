@@ -25,16 +25,16 @@ const groupsDic = {
   calves: "gemelos",
 };
 
-const uuidList = [
-  '86dc1969-5c7d-4753-b1c6-70bd80dd3d71', // 0 - pecho
-  '6b87b3aa-59a5-41bc-b8bc-1c0f021aa97b', // 1 - espalda
-  '7a263ea0-4297-4e05-96ec-ea6956756096', // 2 - hombros
-  'ceee26af-1e13-4497-936c-9e661d9a7699', // 3 - bíceps
-  '65af18e0-3287-4abd-ab7e-ae3fa979af72', // 4 - tríceps
-  'a9be2bfa-b424-48b6-a95a-db9a460fb4b2', // 5 - abdominales
-  'fe328f8b-c915-46c0-b09e-5826411da488', // 6 - piernas
-  '69c95b4e-78a7-482e-b9e8-44b2feff4376', // 7 - gemelos
-];
+// const uuidList = [
+//   '86dc1969-5c7d-4753-b1c6-70bd80dd3d71', // 0 - pecho
+//   '6b87b3aa-59a5-41bc-b8bc-1c0f021aa97b', // 1 - espalda
+//   '7a263ea0-4297-4e05-96ec-ea6956756096', // 2 - hombros
+//   'ceee26af-1e13-4497-936c-9e661d9a7699', // 3 - bíceps
+//   '65af18e0-3287-4abd-ab7e-ae3fa979af72', // 4 - tríceps
+//   'a9be2bfa-b424-48b6-a95a-db9a460fb4b2', // 5 - abdominales
+//   'fe328f8b-c915-46c0-b09e-5826411da488', // 6 - piernas
+//   '69c95b4e-78a7-482e-b9e8-44b2feff4376', // 7 - gemelos
+// ];
 
 const RoutineScreen = () => {
   
@@ -51,32 +51,34 @@ const RoutineScreen = () => {
       .filter((i): i is number => i !== null); // filtramos los que no matchean
   };
 
-  const getUUIDsFromMuscleGroup = (input: string | string[]): string[] => {
-    const values = typeof input === 'string'
-      ? input.split(',').map(s => s.trim())
-      : input;
+  // const getUUIDsFromMuscleGroup = (input: string | string[]): string[] => {
+  //   const values = typeof input === 'string'
+  //     ? input.split(',').map(s => s.trim())
+  //     : input;
   
-    return values
-      .map(val => Object.values(groupsDic).indexOf(val))
-      .filter((i): i is number => i !== -1)
-      .map(i => uuidList[i]);
-  };
+  //   return values
+  //     .map(val => Object.values(groupsDic).indexOf(val))
+  //     .filter((i): i is number => i !== -1)
+  //     .map(i => uuidList[i]);
+  // };
 
   
   const router = useRouter();
   const { dayID, dayName, routineID, routineName,exercises } = useLocalSearchParams();
   
+  
 
   const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
   const [serchArr, setSerchArr] = useState<number[]>([]);
   
-  // ✅ Apenas exercises esté disponible o cambie, seteamos los estados
   useEffect(() => {
-    console.log("Ejecutando useEffect con exercises: ", exercises);
+    // console.log("Ejecutando useEffect con exercises: ", exercises);
     if (exercises) {
-      setSelectedExercises(getUUIDsFromMuscleGroup(exercises));
+      // setSelectedExercises(getUUIDsFromMuscleGroup(exercises));
       setSerchArr(toArray(exercises));
     }
+    // console.log(selectedExercises,serchArr);
+    
   }, [exercises]);
  
   const getImageSource = (imageKey: keyof typeof images_obj) => {
@@ -144,7 +146,7 @@ const RoutineScreen = () => {
   
    
 
- console.log('asdsasadds: ',serchArr);
+//  console.log('asdsasadds: ',serchArr);
  
 
   return (
@@ -169,9 +171,9 @@ const RoutineScreen = () => {
         >
           {dataExecises.map((exercise, index) => (
             <CustomCheckboxSmall
-              key={exercise.id}
+              key={index}
               label={groupsDic[exercise.nameExe as keyof typeof groupsDic]}
-              checked={selectedExercises.includes(exercise.id)}
+              checked={serchArr.includes(index)}
               onPress={() =>
                 toggleExerciseSelection(exercise.id, exercise.nameExe)
               }
